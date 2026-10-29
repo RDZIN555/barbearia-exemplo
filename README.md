@@ -1,8 +1,8 @@
-# Barbearia Exemplo V1.2
+# Barbearia Exemplo V1.2.1
 
 Modelo comercial estático, em preto e dourado, com personalização em `config.js`. O build gera HTML completo, SEO, imagens responsivas, imagem de compartilhamento e ícones. A produção não precisa de Node, backend, banco de dados, pagamentos ou serviços pagos obrigatórios. Não existe sistema público de avaliações nem agenda automática.
 
-Esta branch parte da V1.1 (`7923e0a`), ainda não integrada à `main` no início desta tarefa. O PR da V1.2 depende da V1.1. Nenhum merge ou deploy em produção é autorizado por estas instruções.
+A V1.2.1 continua na branch `feat/barbearia-exemplo-v1-2`, preservando V1.1, V1.2 e a correção de build. Nenhuma outra branch, merge ou publicação direta em produção é necessária. O estado de integração deve ser conferido no PR antes de aprovar o merge.
 
 ## Desenvolvimento e build
 
@@ -27,7 +27,7 @@ O build não acessa APIs remotas. Os avisos `[config]` no terminal informam camp
 | `config.js` | Única fonte dos dados comerciais, textos e seleção de imagens |
 | `index.html` | Estrutura e componentes preservados da V1.1; conteúdo sobrescrito pelo build |
 | `styles.css` | Identidade, responsividade, foco, movimento reduzido e recursos opcionais |
-| `script.js` | Menu acessível e visibilidade do atalho flutuante; sem dados comerciais |
+| `script.js` | Menu acessível, visibilidade do flutuante e aviso de contato sem número; mensagem fornecida pelo build |
 | `assets/` | Originais preservados, usados como fallback e fonte de otimização |
 | `scripts/config.cjs` | Normalização e validação da configuração |
 | `scripts/build.cjs` | Geração estática e otimização local com Cheerio/Sharp |
@@ -54,6 +54,7 @@ O único campo comercial recomendado como obrigatório é `name`. Uma configura�
 | `description` | Meta description, Open Graph, Twitter e descrição estruturada |
 | `whatsapp` | Número comercial confirmado; sem valor válido não há links de contato funcional |
 | `whatsappMessage` | Mensagem genérica das chamadas gerais e do botão flutuante |
+| `whatsappUnavailableMessage` | Aviso sem número; padrão “WhatsApp disponível em breve” |
 | `serviceMessage` | Mensagem por serviço; `{service}` é substituído pelo nome do cartão |
 | `floatingWhatsapp` | `enabled`, `desktop` e `label`; desktop é desativado por padrão |
 | `hours` | Lista de `{ day, time }`; lista vazia omite o bloco sem inventar atendimento |
@@ -79,7 +80,9 @@ Os preços e horários que acompanham o modelo são exemplos **explicitamente co
 
 Use número brasileiro com DDD ou com DDI 55; espaços, parênteses e hífens são normalizados. Um número nacional de 10/11 dígitos recebe 55; um número já com 55 e 12/13 dígitos não recebe DDI duplicado. DDD 55 também é tratado corretamente. Para outros países, use `+` com DDI explícito; `00` internacional também é aceito. A validação é apenas de formato, não comprova titularidade ou disponibilidade. Nunca use número inventado.
 
-Sem número válido, o botão geral fica neutro/desativado, os botões por serviço e o flutuante **não são renderizados**. Os links válidos usam `https://wa.me/`, texto codificado, nova aba e `noopener noreferrer`. Eles não enviam a mensagem sozinhos nem garantem agendamento. O flutuante respeita a safe area, tem alvo de 54px e sai de cena quando o agendamento ou rodapé se aproximam da tela, ou quando sua posição se sobrepõe a texto e controles importantes. Há espaço inferior no celular e alternativa sem JavaScript.
+Sem número válido, o botão geral, os botões por serviço e o flutuante são **botões verdes funcionais**, sem URL nem telefone. Ao clicar, mostram `whatsappUnavailableMessage` em um aviso não modal com região de status acessível. O aviso fecha pelo mesmo botão, pelo controle de fechar, por Escape, por clique externo ou quando o foco segue para outro controle. O botão que abriu o aviso recupera o foco ao fechar pelo controle ou por Escape. Com JavaScript desativado, o bloco de agendamento mostra a mensagem via `noscript`; a interação do aviso requer JavaScript.
+
+Com número válido, os links usam `https://wa.me/`, texto codificado, nova aba e `noopener noreferrer`. Eles não enviam a mensagem sozinhos nem garantem agendamento. Os botões e o flutuante usam verde `#25D366` com texto/ícone escuros para contraste AA, SVG reconhecível, foco visível e feedback de hover/toque. O flutuante respeita a safe area, tem alvo de 54px e sai de cena quando o agendamento ou rodapé se aproximam da tela, ou quando sua posição se sobrepõe a texto e controles importantes. Há espaço inferior no celular e alternativa sem JavaScript.
 
 ### Avaliações — manutenção exclusiva do desenvolvedor
 
@@ -109,11 +112,11 @@ Para um cliente real, use `demo.enabled: false` e refaça o build. A seção com
 
 ## Imagens, licença e compartilhamento
 
-`assets/barbearia.jpg` é a imagem original gerada pela ferramenta OpenAI na V1, de 1536×1024. Não é uma fotografia de um estabelecimento real. A V1.2 preserva seus bytes, o favicon original e os dois enquadramentos da galeria. Não foi criada nenhuma nova fotografia. Direitos sujeitos aos termos aplicáveis da OpenAI; não há pressuposição de exclusividade. **Antes da entrega comercial, substitua as imagens do modelo por fotografias autorizadas do estabelecimento**, registre autoria/licença e não apresente a imagem gerada como registro de uma barbearia específica.
+`assets/barbearia.jpg` é a imagem original gerada pela ferramenta OpenAI na V1, de 1536×1024. Não é uma fotografia de um estabelecimento real. A V1.2.1 preserva seus bytes e o favicon original. A galeria exibe apenas uma entrada única, sem usar dois recortes da mesma imagem como variedade. Não foi criada nenhuma nova fotografia. Direitos sujeitos aos termos aplicáveis da OpenAI; não há pressuposição de exclusividade. **Antes da entrega comercial, substitua as imagens do modelo por fotografias autorizadas do estabelecimento**, registre autoria/licença e não apresente a imagem gerada como registro de uma barbearia específica.
 
-Cadastre `images.hero` com `{ src, alt }`; `images.gallery` aceita até quatro objetos `{ src, alt, caption }`. Use caminhos em `assets/`, sem `..`, URLs externas ou symlinks para fora dessa pasta. Formatos: JPG/JPEG, PNG, WebP e AVIF. O build lê as dimensões reais, usa originais como fallback e cria derivados WebP/AVIF até 480, 768, 1200 e 1600px, sem ultrapassar a largura original; inclui a largura original quando ela não coincide com as faixas. Não edite os derivados manualmente.
+Cadastre `images.hero` com `{ src, alt }`; `images.gallery` aceita até quatro objetos `{ src, alt, caption }` com arquivos distintos. Entradas que repetem o mesmo `src` são descartadas com aviso no build. Não reutilize fotos em outros arquivos ou recortes para simular variedade. A grade adapta uma, duas, três ou quatro imagens, sem espaços reservados vazios. Use caminhos em `assets/`, sem `..`, URLs externas ou symlinks para fora dessa pasta. Formatos: JPG/JPEG, PNG, WebP e AVIF. O build lê as dimensões reais, usa originais como fallback e cria derivados WebP/AVIF até 480, 768, 1200 e 1600px, sem ultrapassar a largura original; inclui a largura original quando ela não coincide com as faixas. Não edite os derivados manualmente.
 
-A imagem principal usa `<picture>`, `srcset`, `sizes`, dimensões, `fetchpriority="high"` e carregamento eager; as secundárias têm lazy loading e decodificação assíncrona. A composição e recortes da V1.1 são mantidos. A cache local em `node_modules/.cache/barbearia` evita recompressão desnecessária e é invalidada pelos bytes da foto e parâmetros de geração.
+A imagem principal usa `<picture>`, `srcset`, `sizes`, dimensões, `fetchpriority="high"` e carregamento eager; as secundárias têm lazy loading e decodificação assíncrona. O hero mantém a composição original; os itens da galeria não usam zoom artificial para simular imagens diferentes. A cache local em `node_modules/.cache/barbearia` evita recompressão desnecessária e é invalidada pelos bytes da foto e parâmetros de geração.
 
 Pesos medidos para a imagem atual (bytes, sem arredondar para KiB):
 
@@ -127,6 +130,14 @@ Pesos medidos para a imagem atual (bytes, sem arredondar para KiB):
 Na largura original, o AVIF é cerca de 75% menor que o JPEG. O peso realmente transferido depende da largura, DPR, formato e cache do navegador; isso não é uma promessa de PageSpeed. O relatório exato de cada build está em `dist/image-report.json`.
 
 O build cria **assets/og-image.jpg, 1200×630**, recortando exclusivamente o hero atual e sobrepondo nome/slogan em preto e dourado. Para atualizar, troque a foto em `images.hero`, nome e slogan e rode o build. A imagem anterior é regenerada automaticamente. Também gera `brand-icon.svg` com monograma e estrela, Apple Touch Icon 180px, PNGs 192/512 e manifest. Os originais não são apagados.
+
+### Fotografias adicionais e licença do ícone (V1.2.1)
+
+Nenhuma fotografia nova foi incorporada nesta correção. O acesso ao CDN do Unsplash, à API do Wikimedia Commons e ao servidor de arquivos Wikimedia retornou `403 Forbidden` no proxy do ambiente. Sem arquivos e autorização verificáveis, foi aplicada a alternativa segura prevista no pedido: galeria preparada para quatro fotos autorizadas, com apenas o original único disponível. Essa limitação não foi mascarada por recortes, arquivos fictícios ou imagens de IA novas.
+
+Quando o cliente fornecer as fotos autorizadas, coloque os arquivos em `assets/` e acrescente três entradas reais a `images.gallery`. Confira autoria, origem, licença comercial e autorizações necessárias antes de utilizar cada uma; registre-os na documentação. Não use rostos de terceiros para sugerir que sejam clientes ou profissionais da barbearia.
+
+O único recurso visual adicional é **um ícone SVG**, não uma fotografia: `assets/icons/whatsapp.svg`, Bootstrap Icons 1.11.3, autoria The Bootstrap Authors, licença MIT. Origem: https://github.com/twbs/icons/blob/v1.11.3/icons/whatsapp.svg. A licença integral está em `licenses/bootstrap-icons-MIT.txt` e é copiada para a saída publicada. O SVG é embutido nos botões, sem CDN ou fontes externas. As condições de uso de marca do WhatsApp continuam aplicáveis; não se sugere associação ou endosso.
 
 ## SEO local e domínio
 
@@ -160,9 +171,9 @@ npm run audit:mobile
 
 Playwright utiliza Chromium do ambiente em `/usr/bin/chromium`; configure `CHROMIUM_PATH` para outro caminho. Se necessário em uma máquina nova, instale Chromium pelo gerenciador oficial ou execute `npx playwright install chromium` e informe o caminho. Lighthouse usa o mesmo binário. Testes são somente de desenvolvimento.
 
-A suíte cria builds temporários isolados em `/tmp/barbearia-v12-tests` e testa modelo, cliente completo, demonstração com contato, configuração mínima e configuração inválida em **375, 390, 768 e 1280px**. Verifica teclado, foco, menu, links internos, normalização e mensagem por serviço do WhatsApp, botão flutuante e rodapé, avaliações fracionárias/ausentes, modo demo, SEO no HTML, robots/sitemap, originais intactos, imagens responsivas, erros JavaScript e 404. O mapa de teste é interceptado localmente: não comprova disponibilidade de um mapa de cliente. Não há envio de mensagens ou avaliações.
+A suíte cria builds temporários isolados em `/tmp/barbearia-v121-tests` e testa modelo, cliente completo, demonstração com contato, configuração mínima, configuração inválida e nota 4,0 em **375, 390, 768 e 1280px**. Verifica teclado, foco, menu, links internos, normalização e mensagem por serviço do WhatsApp, botão flutuante e rodapé, avaliações fracionárias/ausentes, modo demo, SEO no HTML, robots/sitemap, originais intactos, imagens responsivas, erros JavaScript e 404. O mapa e as navegações externas de WhatsApp dos testes são interceptados localmente: não comprovam disponibilidade de um mapa de cliente nem atendimento do número. Não há envio de mensagens ou avaliações. A personalização completa substitui nome, slogan, textos, serviços, preços, horários, contato, mapa, redes e metadados, verificando ausência dos dados anteriores no HTML.
 
-Axe-core verifica WCAG A/AA básico e contraste em todos os cenários/larguras. A suíte testa movimento reduzido e conteúdo sem JavaScript. Capturas ficam em `/tmp/barbearia-v12-screenshots`. Isso não substitui teste manual com leitor de tela, titularidade do contato ou verificação humana de avaliações e dados comerciais.
+Axe-core verifica WCAG A/AA básico e contraste em todos os cenários/larguras. A suíte testa movimento reduzido e conteúdo sem JavaScript. Capturas ficam em `/tmp/barbearia-v121-screenshots`, incluindo avisos abertos. Isso não substitui teste manual com leitor de tela, titularidade do contato ou verificação humana de avaliações e dados comerciais.
 
 Para reproduzir Lighthouse: `node scripts/audit.cjs PASTA LABEL`. Relatórios JSON/HTML em `/tmp/barbearia-audits`; medidas locais com simulação mobile, não PageSpeed de produção. Registre os valores efetivamente medidos na entrega; a demonstração recebe penalidade SEO intencional pelo noindex. A indexação real e os cartões de compartilhamento ainda precisam de teste no domínio publicado.
 

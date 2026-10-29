@@ -1,4 +1,4 @@
-/* CONFIGURAÇÃO PÚBLICA V1.2. Sem senhas ou credenciais.
+/* CONFIGURAÇÃO PÚBLICA V1.2.1. Sem senhas ou credenciais.
    Os serviços, preços e horários abaixo são exemplos explicitamente configurados.
    Confirme todos os dados e substitua as fotografias antes da entrega comercial.
    Execute npm run build após qualquer alteração. */
@@ -9,6 +9,7 @@ module.exports = {
   description: 'Corte, barba e cuidado com atenção a cada detalhe. Conheça os serviços da {name} e consulte a disponibilidade de horários.',
   whatsapp: '', // DDD + número brasileiro, 55 + DDD + número, ou internacional com +.
   whatsappMessage: 'Olá! Gostaria de consultar os horários disponíveis para agendar um atendimento.',
+  whatsappUnavailableMessage: 'WhatsApp disponível em breve',
   serviceMessage: 'Olá! Gostaria de agendar um {service}. Quais horários estão disponíveis?',
   floatingWhatsapp: { enabled: true, desktop: false, label: 'Consultar disponibilidade pelo WhatsApp' },
   mapa: { link: '', embed: '' }, // Embed: Google Maps ou OpenStreetMap; nunca HTML de iframe.
@@ -27,9 +28,8 @@ module.exports = {
   images: {
     hero: { src: 'assets/barbearia.jpg', alt: 'Composição de interior com cadeira de couro e iluminação acolhedora' },
     gallery: [
-      { src: 'assets/barbearia.jpg', alt: 'Composição de interior com cadeira de barbeiro em couro e luz quente', caption: '01 — AQUI, O TEMPO É SEU' },
-      { src: 'assets/barbearia.jpg', alt: 'Detalhe da cadeira de couro e dos acabamentos em tons dourados', caption: '02 — CUIDADO EM CADA DETALHE' }
-    ] // Até quatro fotos. Os dois enquadramentos atuais são preservados no modelo.
+      { src: 'assets/barbearia.jpg', alt: 'Composição de interior com cadeira de barbeiro em couro e luz quente', caption: '01 — AQUI, O TEMPO É SEU' }
+    ] // Até quatro fotos distintas e autorizadas. Não repita arquivos para simular variedade.
   },
   reviews: {
     verified: false, average: null, count: null, source: '', url: '',

@@ -1,16 +1,20 @@
-# Barbearia Exemplo V1.2 — configuração comercial, SEO estático e otimização
+# Barbearia Exemplo V1.2.1 — personalização, WhatsApp e auditoria final
 
-**Dependência:** esta branch parte da V1.1 (`feat/barbearia-exemplo-v1-1`, commit `7923e0a`), que ainda não está integrada à `main` observada (`87a5e39`). O diff para main inclui a V1.1. Revisar essa dependência antes da integração; não fazer merge automático.
+Preserva o site premium e as melhorias V1.1/V1.2, com build estático, SEO gerado no HTML e configuração comercial centralizada. Os ajustes finais tornam o WhatsApp reconhecível e funcional também antes de cadastrar um número, sem contatos fictícios.
 
-Transforma a personalização em um build estático baseado em `config.js`, preservando o design preto e dourado, tipografia, hero, componentes e bytes das imagens originais. Configuração completa ou mínima gera HTML publicado com os dados corretos, sem alterações manuais no template e sem dependência de JavaScript para SEO.
+- Botões gerais, por serviço e flutuante verdes (#25D366), com ícone SVG reconhecível, contraste AA, foco, hover/toque e área adequada.
+- Com número: normalização internacional, mensagem geral ou com nome do serviço, link oficial e nova aba com noopener noreferrer.
+- Sem número: botões mostram mensagem configurável em aviso acessível, com fechamento por repetição, controle, Escape e interação externa. Sem link falso nem janela de erro.
+- Avaliações permanecem exclusivamente manuais e verificadas, com estrelas proporcionais e sem qualquer formulário público.
+- Personalização de nome, slogan, textos, serviços/preços, horários, contato, mapa, redes, reviews, demo, domínio e SEO auditada sem editar HTML.
+- Build e verificador de dist preservados; nenhuma mudança em configuração remota do Cloudflare.
 
-- WhatsApp normalizado, chamadas por serviço e botão flutuante com safe area, alvo de 54px e ocultação perto de agendamento/rodapé. Contatos ausentes não geram links inválidos.
-- Avaliações exclusivamente manuais e verificadas, sem formulário público, com nota numérica, estrelas parciais, quantidade/fonte opcionais e depoimentos autorizados.
-- Modo comercial opcional perto do rodapé; sem link de desenvolvedor não aparece. Demo produz noindex, robots e cabeçalho coerentes. Modo cliente remove o bloqueio.
-- SEO local gerado no HTML: título, descrição, canonical/URLs somente com domínio confirmado, OG, Twitter, HairSalon, robots e sitemap.
-- Derivados AVIF/WebP responsivos sem upscale; OG 1200×630 usa exclusivamente o hero atual. Ícones e manifest são gerados a partir da marca.
-- Mapas restritos a origens de incorporação confiáveis, lazy loading e campos opcionais omitidos sem colunas vazias.
+**Limitação de fotos:** nenhuma fotografia adicional foi incorporada. Unsplash e Wikimedia retornaram HTTP 403 no proxy; não foram usadas imagens sem autorização nem geradas novas fotos por IA. O original e o hero permanecem idênticos. A galeria mantém uma entrada única, sem o segundo recorte repetido, e aceita até quatro fotos distintas quando fornecidas com autorização. Isso segue a alternativa prevista no pedido, mas quatro fotografias ainda são uma pendência de conteúdo.
 
-Validação: instalação por npm ci, build, testes de configuração e 20 cenários de navegador (5 configurações × 375/390/768/1280), teclado/menu/foco, links, WhatsApp, avaliações, demo, imagens, SEO estático, robots/sitemap, contraste com axe, movimento reduzido, ausência de JS errors/404/overflow e originais intactos. Lighthouse mobile local: V1.1 100/100/100/100; V1.2 demo 100/100/100/66 (SEO penalizado intencionalmente pelo noindex); modo cliente 100/100/100/100. Sem promessa de PageSpeed público. Detalhes em docs/VALIDACAO-V1.2.md.
+O único visual novo é o ícone WhatsApp do Bootstrap Icons 1.11.3, licença MIT integral em licenses/bootstrap-icons-MIT.txt, incluída na publicação. A imagem original continua com sua procedência documentada.
 
-**Preparação do deploy:** Pages precisa usar `npm run build` e saída `dist`. Nenhuma configuração remota foi alterada e nenhum deploy em produção foi executado. Não integrar até revisar esses campos no Pages. Número, domínio, endereço e avaliações reais ainda não foram fornecidos; não são inventados. Fotografias do modelo devem ser substituídas por imagens reais autorizadas antes da entrega comercial.
+**Validação V1.2.1:** instalação/build limpos com `npm ci --include=dev && npm run build`, artefatos de dist conferidos; testes de configuração e 24 cenários reais de navegador (6 configurações × 375/390/768/1280), teclado/menu/foco, aviso sem número, cliques com nova aba interceptada localmente, avaliações 4,0/4,5, imagens, SEO, contraste via axe, ausência de JS errors/404/overflow. Sem mensagens enviadas a terceiros. Relatório: docs/VALIDACAO-V1.2.1.md. Não há nova medição Lighthouse nesta correção.
+
+**Base:** main observada permanece em 87a5e39; a branch inclui V1.1 e V1.2 ainda não integradas. O diff para main inclui essas melhorias. Conferir a dependência antes da integração. Trabalhar na mesma branch feat/barbearia-exemplo-v1-2; sem merge automático ou publicação direta em produção.
+
+Cloudflare Pages: raiz do repositório, build `npm ci --include=dev && npm run build`, saída `dist`, Node 22.12+. Não mudar a branch de produção para esta branch de revisão.

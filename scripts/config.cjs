@@ -63,7 +63,14 @@ function normalize(raw = {}, warn = console.warn) {
   const count = verified && Number.isSafeInteger(reviews.count) && reviews.count > 0 ? reviews.count : null;
   if (reviews.count != null && (!Number.isSafeInteger(reviews.count) || reviews.count <= 0)) note('reviews.count');
   const testimonials = verified ? list(reviews.testimonials).filter(item => item && item.verified === true && string(item.author) && string(item.text)) : [];
-  const gallery = list(raw.images?.gallery).slice(0, 4).flatMap(item => { const result = image(item); if (!result) note('images.gallery'); return result ? [result] : []; });
+  const seenPhotos = new Set();
+  const gallery = list(raw.images?.gallery).flatMap(item => {
+    const result = image(item);
+    if (!result) { note('images.gallery'); return []; }
+    if (seenPhotos.has(result.src)) { note('images.gallery (arquivo repetido)'); return []; }
+    seenPhotos.add(result.src);
+    return [result];
+  }).slice(0, 4);
   const hero = image(raw.images?.hero);
   if (!hero) note('images.hero');
   const mapa = raw.mapa || {};
@@ -74,6 +81,7 @@ function normalize(raw = {}, warn = console.warn) {
     description: string(raw.description).split('{name}').join(name) || `Conheça ${name}${string(raw.city) ? ` em ${string(raw.city)}` : ''}. Consulte os serviços e as informações de atendimento.`,
     whatsapp: number,
     whatsappMessage: string(raw.whatsappMessage) || 'Olá! Gostaria de consultar os horários disponíveis para agendar um atendimento.',
+    whatsappUnavailableMessage: string(raw.whatsappUnavailableMessage) || 'WhatsApp disponível em breve',
     serviceMessage: string(raw.serviceMessage) || 'Olá! Gostaria de agendar um {service}. Quais horários estão disponíveis?',
     floating: { enabled: raw.floatingWhatsapp?.enabled !== false, desktop: raw.floatingWhatsapp?.desktop === true, label: string(raw.floatingWhatsapp?.label) || 'Consultar disponibilidade pelo WhatsApp' },
     services, hours, images: { hero, gallery },

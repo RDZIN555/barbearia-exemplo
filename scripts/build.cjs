@@ -24,7 +24,18 @@ sharp.concurrency(2);
   fs.rmSync(output, { recursive: true, force: true });
   fs.mkdirSync(output, { recursive: true });
   fs.cpSync(path.join(root, 'assets'), path.join(output, 'assets'), { recursive: true });
+  fs.cpSync(path.join(root, 'licenses'), path.join(output, 'licenses'), { recursive: true });
   const $ = cheerio.load(fs.readFileSync(path.join(root, 'index.html'), 'utf8'));
+  const iconMarkup = fs.readFileSync(path.join(root, 'assets/icons/whatsapp.svg'), 'utf8');
+  function whatsappAction(label, className, message, ariaLabel) {
+    const node = $(config.whatsapp ? '<a>' : '<button type="button">').addClass(className + ' whatsapp-action');
+    const icon = $(iconMarkup).attr({ 'aria-hidden':'true', focusable:'false' });
+    node.append(icon).append($('<span>').text(label));
+    if (ariaLabel) node.attr('aria-label',ariaLabel);
+    if (config.whatsapp) link(node,wa(message));
+    else node.attr({ 'data-whatsapp-unavailable':'', 'aria-controls':'whatsapp-notice', 'aria-expanded':'false' });
+    return node;
+  }
   const report = [];
   const photos = new Map();
   async function photo(info) {
@@ -112,11 +123,12 @@ sharp.concurrency(2);
     if (service.description) card.find('p').text(service.description); else card.find('p').remove();
     card.find('[data-price]').attr('data-price',service.id).text(money(service.price));
     if (service.duration) card.find('.service-price > span').text(service.duration); else card.find('.service-price > span').remove();
-    if (config.whatsapp) {
-      const button = $('<a class="service-cta text-link">').text(copy(content.services?.serviceCta,'Agendar este serviço')).attr('aria-label',`Consultar horários para ${service.name} pelo WhatsApp`);
-      link(button,wa(config.serviceMessage.split('{service}').join(service.name)));
-      card.append(button);
-    }
+    const button = whatsappAction(
+      copy(content.services?.serviceCta,'Agendar este serviço'), 'button service-cta',
+      config.serviceMessage.split('{service}').join(service.name),
+      `Consultar horários para ${service.name} pelo WhatsApp`
+    );
+    card.append(button);
     $('.service-grid').append(card);
   });
   const footnote = $('.service-footnote').empty().append(escape(copy(content.services?.footnote)));
@@ -126,7 +138,7 @@ sharp.concurrency(2);
   section('#espaco',content.gallery,'O espaço');
   $('.gallery-grid').empty().attr('data-count',config.images.gallery.length);
   for (const [i,info] of config.images.gallery.entries()) {
-    const figure = $('<figure>').addClass(i === 0 ? 'gallery-main' : i === 1 ? 'gallery-detail' : '');
+    const figure = $('<figure>').addClass(i === 0 ? 'gallery-main' : '');
     figure.append(await picture(info));
     if (info.caption) figure.append($('<figcaption>').text(info.caption));
     $('.gallery-grid').append(figure);
@@ -166,12 +178,12 @@ sharp.concurrency(2);
   const booking = content.booking || {};
   section('#agendamento',booking,'Vamos conversar');
   if (copy(booking.description)) $('#agendamento > div').first().children('p:not(.eyebrow)').text(booking.description); else $('#agendamento > div').first().children('p:not(.eyebrow)').remove();
+  const bookingButton = whatsappAction(copy(booking.cta,'Consultar pelo WhatsApp'), 'button whatsapp', config.whatsappMessage);
+  $('.whatsapp').replaceWith(bookingButton);
   if (config.whatsapp) {
-    const button = $('<a class="button whatsapp" aria-describedby="whatsapp-status">').text(copy(booking.cta,'Consultar pelo WhatsApp'));
-    link(button,wa(config.whatsappMessage));
-    $('.whatsapp').replaceWith(button);
+    bookingButton.attr('aria-describedby','whatsapp-status');
     $('#whatsapp-status').text('Abre o WhatsApp em uma nova aba. Atendimento sujeito à disponibilidade.');
-  }
+  } else $('#whatsapp-status').remove();
   const contact = content.contact || {};
   section('#contato',contact,'Contato');
   if (copy(contact.description)) multiline($('#contato > div').first().children('p:not(.eyebrow)'),contact.description); else $('#contato > div').first().children('p:not(.eyebrow)').remove();
@@ -202,11 +214,20 @@ sharp.concurrency(2);
     const button = $('<a class="button">').text(config.demo.contatoLabel); link(button,config.demo.contatoLink);
     demo.append(button); $('footer').before(demo);
   }
-  if (config.whatsapp && config.floating.enabled) {
-    const floating = $('<a class="whatsapp-float">').attr({ 'aria-label':config.floating.label, 'data-desktop':String(config.floating.desktop) });
-    link(floating,wa(config.whatsappMessage));
-    floating.append('<svg viewBox="0 0 32 32" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M27 15a11 11 0 0 1-16 10L5 27l2-6A11 11 0 1 1 27 15Z"/><path d="m12 10-2 2c1 6 4 9 10 10l2-2-4-3-2 1-3-3 1-2Z"/></svg>');
+  if (config.floating.enabled) {
+    const floating = whatsappAction('', 'whatsapp-float', config.whatsappMessage, config.floating.label)
+      .attr('data-desktop',String(config.floating.desktop));
+    floating.find('span').remove();
     $('body').append(floating).addClass('has-floating-whatsapp');
+  }
+  if (!config.whatsapp) {
+    const notice = $('<div id="whatsapp-notice" class="whatsapp-notice" hidden>')
+      .attr({ 'data-message':config.whatsappUnavailableMessage, role:'region', 'aria-label':'Informação de contato' });
+    notice.append('<p id="whatsapp-notice-text" role="status" aria-live="polite" aria-atomic="true"></p>');
+    notice.append('<button type="button" class="notice-close" aria-label="Fechar mensagem"><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.5"><path d="m6 6 12 12M6 18 18 6"/></svg></button>');
+    $('body').append(notice);
+    // Alternativa de leitura para visitantes que desativaram JavaScript.
+    $('.booking-action').append($('<noscript>').text(config.whatsappUnavailableMessage));
   }
 
   // Metadados efetivamente publicados no HTML, sem depender do navegador.

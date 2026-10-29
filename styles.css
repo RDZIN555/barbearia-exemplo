@@ -1189,3 +1189,33 @@ html:not(.js) .whatsapp-float { position: static; margin: 20px; }
 @media (max-width: 600px) { .menu-toggle { flex-basis: 44px; width: 44px; } }
 
 .whatsapp-float.is-covered { visibility: hidden; pointer-events: none; }
+/* V1.2.1 — WhatsApp reconhecível, contraste AA e galeria sem recortes repetidos. */
+.button.whatsapp-action, .whatsapp-float {
+  background: #25d366;
+  color: #102b1a;
+  border: 1px solid #102b1a;
+  cursor: pointer;
+  font-family: inherit;
+  text-decoration: none;
+  transition: background .18s, transform .18s, box-shadow .18s;
+}
+.button.whatsapp-action { gap: 12px; justify-content: center; min-height: 48px; }
+.whatsapp-action > svg { width: 23px; height: 23px; flex: 0 0 auto; }
+.button.whatsapp-action:hover:not(:disabled), .whatsapp-float:hover { background: #38e47a; box-shadow: 0 4px 15px #0002; }
+.button.whatsapp-action:active, .whatsapp-float:active { background: #1fbd59; transform: scale(.98); }
+.whatsapp-action:focus-visible { outline: 3px solid var(--gold); outline-offset: 4px; }
+.service-cta { width: 100%; padding: 12px; font-size: 11px; line-height: 1.5; }
+.service-cta::after { content: none; }
+.whatsapp-float > svg { width: 29px; height: 29px; }
+.whatsapp-notice { position: fixed; z-index: 30; right: 20px; bottom: calc(88px + env(safe-area-inset-bottom,0px)); max-width: min(360px,calc(100vw - 40px)); padding: 16px 10px 16px 20px; display: flex; align-items: center; gap: 8px; background: var(--panel); color: var(--white); border: 1px solid var(--gold); box-shadow: 0 8px 30px #0005; }
+.whatsapp-notice p { margin: 0; font-size: 13px; overflow-wrap: anywhere; }
+.notice-close { background: transparent; color: var(--white); border: 0; cursor: pointer; flex: 0 0 44px; width: 44px; height: 44px; display: inline-flex; align-items: center; justify-content: center; }
+.notice-close:hover { color: var(--gold); }
+.notice-close svg { width: 20px; height: 20px; }
+.gallery-grid[data-count="1"] { grid-template-columns: minmax(0,1fr); }
+@media (prefers-reduced-motion: reduce) {
+  .button.whatsapp-action:hover, .button.whatsapp-action:active, .whatsapp-float:active { transform: none; }
+}
+@media (min-width: 601px) and (max-width: 900px) {
+  .booking .button.whatsapp-action { min-width: 250px; }
+}

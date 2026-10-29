@@ -70,3 +70,35 @@ if (floating) {
 }
 const year = document.querySelector('#year');
 if (year) year.textContent = new Date().getFullYear();
+
+// Aviso não modal: nenhum telefone fictício e nenhuma janela externa sem número.
+const notice = document.querySelector('#whatsapp-notice');
+if (notice) {
+  const message = notice.querySelector('[role="status"]');
+  let activeTrigger = null;
+  function closeNotice(restoreFocus = false) {
+    notice.hidden = true;
+    message.textContent = '';
+    activeTrigger?.setAttribute('aria-expanded','false');
+    if (restoreFocus) activeTrigger?.focus();
+    activeTrigger = null;
+  }
+  document.addEventListener('click', event => {
+    const trigger = event.target.closest('[data-whatsapp-unavailable]');
+    if (trigger) {
+      if (!notice.hidden && activeTrigger === trigger) { closeNotice(); return; }
+      closeNotice();
+      activeTrigger = trigger;
+      notice.hidden = false;
+      message.textContent = notice.dataset.message;
+      trigger.setAttribute('aria-expanded','true');
+    } else if (event.target.closest('.notice-close')) closeNotice(true);
+    else if (!notice.contains(event.target)) closeNotice();
+  });
+  document.addEventListener('keydown', event => {
+    if (event.key === 'Escape' && !notice.hidden) { event.preventDefault(); closeNotice(true); }
+  });
+  document.addEventListener('focusin', event => {
+    if (!notice.hidden && event.target !== activeTrigger && !notice.contains(event.target)) closeNotice();
+  });
+}

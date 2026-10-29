@@ -26,3 +26,10 @@ for (const value of [undefined,null,{}, {demo:{enabled:false}}]) assert.doesNotT
 for (const average of [0,4,4.5,4.7,5]) assert.equal(normalize({reviews:{verified:true,average}},()=>{}).reviews.active,true);
 assert.equal(normalize({reviews:{verified:false,average:4.5,count:20}},()=>{}).reviews.active,false);
 console.log('PASS config: BR/international phones, HTTPS, trusted map origins, safe defaults, review boundaries and private warning values');
+
+const photo = src => ({src,alt:'Fixture de teste de configuração'});
+const gallery = normalize({images:{gallery:[photo('assets/one.jpg'),photo('assets/one.jpg'),photo('assets/two.jpg'),photo('assets/three.jpg'),photo('assets/four.jpg'),photo('assets/five.jpg')]}},()=>{}).images.gallery;
+assert.deepEqual(gallery.map(item=>item.src),['assets/one.jpg','assets/two.jpg','assets/three.jpg','assets/four.jpg']);
+assert.equal(normalize({},()=>{}).whatsappUnavailableMessage,'WhatsApp disponível em breve');
+assert.equal(normalize({whatsappUnavailableMessage:'Mensagem própria'},()=>{}).whatsappUnavailableMessage,'Mensagem própria');
+console.log('PASS gallery: até quatro referências distintas; aviso sem número configurável');
