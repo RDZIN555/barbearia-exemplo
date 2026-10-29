@@ -63,14 +63,6 @@ a:focus-visible,button:focus-visible {
   top:12px;
 }
 
-.demo-banner {
-  text-align:center;
-  background:#24271f;
-  color:#c9cbbb;
-  font-size:9px;
-  letter-spacing:2px;
-  padding:7px 15px;
-}
 
 .header {
   height:100px;
@@ -462,11 +454,6 @@ figcaption {
   letter-spacing:1.6px;
 }
 
-.image-disclosure {
-  font-size:10px;
-  color:#b4b6a8;
-  margin:14px 0 0;
-}
 
 .about {
   display:grid;
@@ -604,9 +591,6 @@ figcaption {
   margin-bottom:7px;
 }
 
-.small-note {
-  font-size:10px!important;
-}
 
 .hours {
   padding-top:6px;
@@ -860,11 +844,6 @@ footer>a:last-of-type {
   html {
     scroll-padding-top:25px;
   }
-  .demo-banner {
-    font-size:7px;
-    letter-spacing:1px;
-    padding:7px 20px;
-  }
   .header {
     height:78px;
     padding-inline:6%;
@@ -891,11 +870,11 @@ footer>a:last-of-type {
     display:none;
   }
   .hero {
-    min-height:665px;
+    min-height:590px;
     align-items:flex-start;
   }
   .hero-content {
-    margin:65px 6% 90px;
+    margin:46px 6% 65px;
     max-width:88%;
   }
   .hero-image {
@@ -1006,9 +985,6 @@ footer>a:last-of-type {
   }
   .gallery-detail img {
     height:230px;
-  }
-  .image-disclosure {
-    font-size:9px;
   }
   .about {
     display:flex;
@@ -1122,3 +1098,48 @@ footer>a:last-of-type {
   transform:rotate(-45deg);
 }
 
+/* V1.1 — refinamentos sobre a identidade existente. */
+[hidden] { display: none !important; }
+.header-cta { min-height: 44px; display: inline-flex; align-items: center; justify-content: center; }
+.service-price strong { font-size: 32px; }
+.service-price > span { font-size: 10px; }
+.brand { min-width: 0; }
+.brand > span:last-child { overflow-wrap: anywhere; max-width: 220px; }
+.social-links { padding: 24px 8%; border-top: 1px solid var(--line); display: flex; gap: 25px; flex-wrap: wrap; color: var(--gold); }
+.social-links a { overflow-wrap: anywhere; }
+.gallery-grid[data-count="3"], .gallery-grid[data-count="4"] { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.gallery-grid[data-count="3"] .gallery-main { grid-column: 1 / -1; }
+.review-summary { min-width: 220px; }
+.review-summary > strong { display: block; font: 42px var(--serif); color: var(--gold); }
+.review-stars { display: block; width: 150px; height: 30px; margin-block: 12px; }
+.review-summary p { font-size: 13px; color: var(--muted); margin-bottom: 15px; }
+.review-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 20px; }
+.review-grid figure { padding: 28px; border: 1px solid var(--line); background: var(--panel); overflow-wrap: anywhere; }
+.review-grid blockquote { margin: 0 0 20px; font: 21px/1.6 var(--serif); }
+.review-grid figcaption { position: static; padding: 0; background: none; color: var(--gold); letter-spacing: 1px; }
+.reviews { border-top: 1px solid var(--line); }
+.hours dl, .service-card, .contact > div, .review-summary { min-width: 0; overflow-wrap: anywhere; }
+.location-card #map-link { align-self: flex-start; margin-top: 10px; }
+@media (max-width: 900px) {
+  .review-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .header-cta { margin-right: 18px; }
+}
+@media (max-width: 600px) {
+  .header { height: 76px; gap: 10px; }
+  .header .brand { flex: 1; gap: 7px; }
+  .header .brand > span:last-child { max-width: 140px; }
+  .header .brand-mark { padding-right: 12px; }
+  .header-cta { flex: 0 0 125px; margin: 0; padding: 10px 7px; font-size: 9px; letter-spacing: .5px; line-height: 1.4; text-align: center; }
+  .menu-toggle { flex: 0 0 38px; min-height: 44px; }
+  .hero { min-height: 590px; }
+  .hero-content { margin: 46px 6% 65px; }
+  .hero-actions { margin-top: 23px; gap: 17px; }
+  .hero-note { margin-top: 25px; }
+  .service-price strong { font-size: 32px; }
+  .gallery-grid[data-count] { grid-template-columns: minmax(0, 1fr); }
+  .gallery-grid[data-count="3"] .gallery-main { grid-column: auto; }
+  .gallery-grid figure img { height: 265px; }
+  .review-grid { grid-template-columns: minmax(0, 1fr); }
+  .review-summary { margin-top: 25px; }
+  .social-links { padding-inline: 6%; }
+}
