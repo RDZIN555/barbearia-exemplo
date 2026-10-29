@@ -22,6 +22,7 @@ fs.mkdirSync(cache, { recursive: true });
 const hash = value => crypto.createHash('sha256').update(value).digest('hex').slice(0, 12);
 const escape = value => String(value).replace(/[&<>"']/g, char => ({ '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#39;' }[char]));
 const money = value => value === null ? 'Sob consulta' : new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL', minimumFractionDigits: Number.isInteger(value) ? 0 : 2 }).format(value);
+const imageEngine = `sharp-${sharp.versions.sharp}-vips-${sharp.versions.vips}`;
 const wa = message => `https://wa.me/${config.whatsapp}?text=${encodeURIComponent(message)}`;
 sharp.concurrency(2);
 
@@ -51,7 +52,7 @@ sharp.concurrency(2);
     const meta = await sharp(input).metadata();
     const widths = [...new Set([480,768,1200,1600,meta.width].filter(width => width <= meta.width))].sort((a,b) => a-b);
     const variants = { webp: [], avif: [] };
-    const id = hash(Buffer.concat([input, Buffer.from('v1.2-quality76-avif45')]));
+    const id = hash(Buffer.concat([input, Buffer.from(`quality76-avif45-${imageEngine}`)]));
     for (const width of widths) {
       for (const format of ['webp','avif']) {
         const name = `assets/optimized/${id}-${width}.${format}`;
@@ -249,7 +250,7 @@ sharp.concurrency(2);
   if (config.images.hero) {
     const input = fs.readFileSync(path.join(root,config.images.hero.src));
     const overlay = `<svg width="1200" height="630" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient id="shade"><stop stop-color="#151714" stop-opacity=".9"/><stop offset="1" stop-color="#151714" stop-opacity=".15"/></linearGradient></defs><rect width="1200" height="630" fill="url(#shade)"/><path d="M70 370h70" stroke="#c8aa75" stroke-width="2"/><text x="70" y="440" font-family="Georgia,serif" font-size="${Math.min(64,1050/Math.max(config.name.length,1)*1.6)}" fill="#f4f0e7">${escape(config.name)}</text><text x="70" y="500" font-family="Georgia,serif" font-size="${Math.min(30,1050/Math.max(config.slogan.length,1)*1.6)}" fill="#c8aa75">${escape(config.slogan)}</text></svg>`;
-    const key = hash(Buffer.concat([input,Buffer.from(overlay)]));
+    const key = hash(Buffer.concat([input,Buffer.from(overlay + imageEngine)]));
     const cached = path.join(cache,`og-${key}.jpg`);
     if (!fs.existsSync(cached)) await sharp(input).resize(1200,630,{fit:'cover'}).composite([{input:Buffer.from(overlay)}]).jpeg({quality:85,mozjpeg:true}).toFile(cached);
     fs.copyFileSync(cached,path.join(output,'assets/og-image.jpg'));

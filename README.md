@@ -1,12 +1,12 @@
-# Barbearia Exemplo V1.2.2
+# Barbearia Exemplo V1.2.3 — auditoria; galeria pendente
 
 Modelo comercial estático, em preto e dourado, com personalização em `config.js`. O build gera HTML completo, SEO, imagens responsivas, imagem de compartilhamento e ícones. A produção não precisa de Node, backend, banco de dados, pagamentos ou serviços pagos obrigatórios. Não existe sistema público de avaliações nem agenda automática.
 
-A V1.2.2 continua na branch `feat/barbearia-exemplo-v1-2`, preservando V1.1, V1.2 e a correção de build. Nenhuma outra branch, merge ou publicação direta em produção é necessária. O estado de integração deve ser conferido no PR antes de aprovar o merge.
+A V1.2.3 continua na branch `feat/barbearia-exemplo-v1-2`, preservando V1.1, V1.2 e a correção de build. Nenhuma outra branch, merge ou publicação direta em produção é necessária. O estado de integração deve ser conferido no PR antes de aprovar o merge.
 
 ## Desenvolvimento e build
 
-Requer Node 22.12+ (a versão principal está em `.node-version`) e npm. Validação desta tarefa em Node 24.19.0. Instale pelo lockfile:
+Requer Node 22.19+ (a versão principal está em `.node-version`) e npm. Validação desta tarefa em Node 24.19.0. Instale pelo lockfile:
 
 ```sh
 npm ci
@@ -17,6 +17,8 @@ npm run preview
 O servidor de desenvolvimento serve **dist/** na porta 8080, somente em loopback; `PORT` permite escolher outra porta. Faça novo build após editar a configuração ou arquivos. Não sirva a raiz como versão final: `index.html` é o template do build, não o produto personalizado.
 
 `npm run build` termina verificando os arquivos publicados e a consistência com `wrangler.jsonc`; falhas deixam código de saída diferente de zero. `npm run verify:dist` repete apenas essa verificação.
+
+A auditoria completa npm foi de 30 para zero alertas após atualizar Sharp e Lighthouse de forma explícita e testada; detalhes e limites em [SEGURANCA-V1.2.3.md](docs/SEGURANCA-V1.2.3.md). O site publicado não inclui essas ferramentas.
 
 O build não acessa APIs remotas. Os avisos `[config]` no terminal informam campos inválidos sem revelar seus valores; a renderização usa padrões seguros e omite recursos opcionais. Uma imagem cadastrada que não existe causa erro de build explícito para impedir links 404 na entrega. A pasta `dist/` é recriada pelo build; não a utilize para arquivos manuais.
 
@@ -123,28 +125,28 @@ Para um cliente real, use `demo.enabled: false` e refaça o build. A seção com
 
 ## Imagens, licença e compartilhamento
 
-`assets/barbearia.jpg` é a imagem original gerada pela ferramenta OpenAI na V1, de 1536×1024. Não é uma fotografia de um estabelecimento real. A V1.2.2 preserva seus bytes e o favicon original. A galeria exibe apenas uma entrada única, sem usar dois recortes da mesma imagem como variedade. Não foi criada nenhuma nova fotografia. Direitos sujeitos aos termos aplicáveis da OpenAI; não há pressuposição de exclusividade. **Antes da entrega comercial, substitua as imagens do modelo por fotografias autorizadas do estabelecimento**, registre autoria/licença e não apresente a imagem gerada como registro de uma barbearia específica.
+`assets/barbearia.jpg` é a imagem original gerada pela ferramenta OpenAI na V1, de 1536×1024. Não é uma fotografia de um estabelecimento real. A V1.2.3 preserva seus bytes e o favicon original. A galeria exibe apenas uma entrada única, sem usar dois recortes da mesma imagem como variedade. Não foi criada nenhuma nova fotografia. Direitos sujeitos aos termos aplicáveis da OpenAI; não há pressuposição de exclusividade. **Antes da entrega comercial, substitua as imagens do modelo por fotografias autorizadas do estabelecimento**, registre autoria/licença e não apresente a imagem gerada como registro de uma barbearia específica.
 
 Cadastre `images.hero` com `{ src, alt }`; `images.gallery` aceita até quatro objetos `{ src, alt, caption }` com arquivos distintos. Entradas que repetem o mesmo `src` são descartadas com aviso no build. Não reutilize fotos em outros arquivos ou recortes para simular variedade. A grade adapta uma, duas, três ou quatro imagens, sem espaços reservados vazios. Use caminhos em `assets/`, sem `..`, URLs externas ou symlinks para fora dessa pasta. Formatos: JPG/JPEG, PNG, WebP e AVIF. O build lê as dimensões reais, usa originais como fallback e cria derivados WebP/AVIF até 480, 768, 1200 e 1600px, sem ultrapassar a largura original; inclui a largura original quando ela não coincide com as faixas. Não edite os derivados manualmente.
 
-A imagem principal usa `<picture>`, `srcset`, `sizes`, dimensões, `fetchpriority="high"` e carregamento eager; as secundárias têm lazy loading e decodificação assíncrona. O hero mantém a composição original; os itens da galeria não usam zoom artificial para simular imagens diferentes. A cache local em `node_modules/.cache/barbearia` evita recompressão desnecessária e é invalidada pelos bytes da foto e parâmetros de geração.
+A imagem principal usa `<picture>`, `srcset`, `sizes`, dimensões, `fetchpriority="high"` e carregamento eager; as secundárias têm lazy loading e decodificação assíncrona. O hero mantém a composição original; os itens da galeria não usam zoom artificial para simular imagens diferentes. A cache local em `node_modules/.cache/barbearia` evita recompressão desnecessária e é invalidada pelos bytes da foto, parâmetros e versões Sharp/libvips.
 
 Pesos medidos para a imagem atual (bytes, sem arredondar para KiB):
 
 | Largura | JPEG original | WebP | AVIF |
 | --- | ---: | ---: | ---: |
-| 480 | — | 19.680 | 11.770 |
-| 768 | — | 43.058 | 24.507 |
-| 1200 | — | 84.242 | 46.067 |
-| 1536 | 266.302 | 123.650 | 66.917 |
+| 480 | — | 19.680 | 10.328 |
+| 768 | — | 43.058 | 21.635 |
+| 1200 | — | 84.242 | 43.829 |
+| 1536 | 266.302 | 123.650 | 64.228 |
 
-Na largura original, o AVIF é cerca de 75% menor que o JPEG. O peso realmente transferido depende da largura, DPR, formato e cache do navegador; isso não é uma promessa de PageSpeed. O relatório exato de cada build está em `dist/image-report.json`.
+Na largura original, o AVIF é cerca de 76% menor que o JPEG. O peso realmente transferido depende da largura, DPR, formato e cache do navegador; isso não é uma promessa de PageSpeed. O relatório exato de cada build está em `dist/image-report.json`.
 
 O build cria **assets/og-image.jpg, 1200×630**, recortando exclusivamente o hero atual e sobrepondo nome/slogan em preto e dourado. Para atualizar, troque a foto em `images.hero`, nome e slogan e rode o build. A imagem anterior é regenerada automaticamente. Também gera `brand-icon.svg` com B vetorial e estrela (outros nomes usam a inicial configurada), PNGs 16/32/48, Apple Touch Icon 180px, PNGs 192/512 e manifest. Os links de ícone recebem versão baseada no conteúdo para evitar cache antigo. O logotipo do cabeçalho é preservado. Os originais não são apagados.
 
 ### Fotografias adicionais e licença do ícone
 
-Nenhuma fotografia nova foi incorporada nesta correção. O acesso ao CDN do Unsplash, à API do Wikimedia Commons e ao servidor de arquivos Wikimedia retornou `403 Forbidden` no proxy do ambiente. Sem arquivos e autorização verificáveis, foi aplicada a alternativa segura prevista no pedido: galeria preparada para quatro fotos autorizadas, com apenas o original único disponível. Essa limitação não foi mascarada por recortes, arquivos fictícios ou imagens de IA novas.
+Nenhuma fotografia nova foi incorporada nesta correção. As três fontes Pexels enviadas pelo proprietário estão registradas em [fontes pendentes](docs/FONTES-FOTOGRAFIAS-V1.2.3.md): ainda faltam acesso aos arquivos, comparação com as páginas e confirmação independente da licença. A galeria não está concluída. O acesso ao CDN do Unsplash, à API do Wikimedia Commons e ao servidor de arquivos Wikimedia retornou `403 Forbidden` no proxy do ambiente. Sem arquivos e autorização verificáveis, foi aplicada a alternativa segura prevista no pedido: galeria preparada para quatro fotos autorizadas, com apenas o original único disponível. Essa limitação não foi mascarada por recortes, arquivos fictícios ou imagens de IA novas.
 
 Quando o cliente fornecer as fotos autorizadas, coloque os arquivos em `assets/` e acrescente três entradas reais a `images.gallery`. Confira autoria, origem, licença comercial e autorizações necessárias antes de utilizar cada uma; registre-os na documentação. Não use rostos de terceiros para sugerir que sejam clientes ou profissionais da barbearia.
 
@@ -166,7 +168,7 @@ A saída continua sendo exclusivamente estática. O build novo precisa ser confi
 - Instalação: `npm ci` usando `package-lock.json` (o Pages pode executar instalação automaticamente).
 - Comando de build no Pages: **`npm ci --include=dev && npm run build`**.
 - Diretório de saída: **`dist`**.
-- Node: 22.12+; `.node-version` seleciona a versão principal.
+- Node: 22.19+; `.node-version` seleciona a versão principal.
 - Branch de produção: mantenha a atual (`main`) e publique somente após aprovação/merge autorizado.
 
 `wrangler.jsonc` registra `pages_build_output_dir` para ferramentas do Pages. Se o painel ainda estiver com comando vazio, **configure o comando acima antes de repetir o deploy**. A raiz do projeto deve ser a raiz do repositório (campo vazio ou `/`), e não `dist`. O arquivo não altera sozinho os campos do painel nem configura DNS. O erro `Output directory "dist" not found` indica que a etapa de publicação não encontrou a saída; escolher `dist` no Wrangler não executa o build. Veja [diagnóstico e configuração exata](docs/DEPLOY-CLOUDFLARE.md). Para upload direto manual, envie somente o conteúdo de `dist/`, incluindo `_headers`. Não envie código fonte, testes, documentação ou `node_modules`.
@@ -182,9 +184,9 @@ npm run audit:mobile
 
 Playwright utiliza Chromium do ambiente em `/usr/bin/chromium`; configure `CHROMIUM_PATH` para outro caminho. Se necessário em uma máquina nova, instale Chromium pelo gerenciador oficial ou execute `npx playwright install chromium` e informe o caminho. Lighthouse usa o mesmo binário. Testes são somente de desenvolvimento.
 
-A suíte cria builds temporários isolados em `/tmp/barbearia-v122-tests` e testa modelo, cliente completo, demonstração com contato, configuração mínima, configuração inválida e nota 4,0 em **375, 390, 768, 1280, 1440 e 1920px**. Verifica teclado, foco, menu, links internos, normalização e mensagem por serviço do WhatsApp, botão flutuante e rodapé, avaliações fracionárias/ausentes, modo demo, SEO no HTML, robots/sitemap, originais intactos, imagens responsivas, erros JavaScript e 404. O mapa e as navegações externas de WhatsApp dos testes são interceptados localmente: não comprovam disponibilidade de um mapa de cliente nem atendimento do número. Não há envio de mensagens ou avaliações. A personalização completa substitui nome, slogan, textos, serviços, preços, horários, contato, mapa, redes e metadados, verificando ausência dos dados anteriores no HTML.
+A suíte cria builds temporários isolados em `/tmp/barbearia-v123-tests` e testa modelo, cliente completo, demonstração com contato, configuração mínima, configuração inválida e nota 4,0 em **375, 390, 768, 1280, 1440 e 1920px**. Verifica teclado, foco, menu, links internos, normalização e mensagem por serviço do WhatsApp, botão flutuante e rodapé, avaliações fracionárias/ausentes, modo demo, SEO no HTML, robots/sitemap, originais intactos, imagens responsivas, erros JavaScript e 404. O mapa e as navegações externas de WhatsApp dos testes são interceptados localmente: não comprovam disponibilidade de um mapa de cliente nem atendimento do número. Não há envio de mensagens ou avaliações. A personalização completa substitui nome, slogan, textos, serviços, preços, horários, contato, mapa, redes e metadados, verificando ausência dos dados anteriores no HTML.
 
-São 36 cenários públicos, além de seis cenários privados com dados sintéticos temporários. O teste privado compara todos os bytes da saída, verifica ausência do contato nos artefatos/logs, Git ignore, rejeição de override para dist e isolamento HTTP local. Nenhum número pessoal é necessário para executar a suíte. Axe-core verifica WCAG A/AA básico e contraste nos cenários públicos, inclusive com o aviso aberto. A suíte testa movimento reduzido e conteúdo sem JavaScript. Capturas ficam em `/tmp/barbearia-v122-screenshots`, incluindo avisos abertos. Isso não substitui teste manual com leitor de tela, titularidade do contato ou verificação humana de avaliações e dados comerciais.
+São 36 cenários públicos, além de seis cenários privados com dados sintéticos temporários. O teste privado compara todos os bytes da saída, verifica ausência do contato nos artefatos/logs, Git ignore, rejeição de override para dist e isolamento HTTP local. Nenhum número pessoal é necessário para executar a suíte. Axe-core verifica WCAG A/AA básico e contraste nos cenários públicos, inclusive com o aviso aberto. A suíte testa movimento reduzido e conteúdo sem JavaScript. Capturas ficam em `/tmp/barbearia-v123-screenshots`, incluindo avisos abertos. Isso não substitui teste manual com leitor de tela, titularidade do contato ou verificação humana de avaliações e dados comerciais.
 
 Para reproduzir Lighthouse: `node scripts/audit.cjs PASTA LABEL`. Relatórios JSON/HTML em `/tmp/barbearia-audits`; medidas locais com simulação mobile, não PageSpeed de produção. Registre os valores efetivamente medidos na entrega; a demonstração recebe penalidade SEO intencional pelo noindex. A indexação real e os cartões de compartilhamento ainda precisam de teste no domínio publicado.
 

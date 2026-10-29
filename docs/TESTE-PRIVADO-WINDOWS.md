@@ -4,7 +4,7 @@ Não informe seu número pessoal no chat, GitHub, Pull Request, config.js públi
 
 ## 1. Preparar o computador
 
-1. Instale Node.js LTS 22.12 ou superior pelo instalador oficial de https://nodejs.org. Feche e reabra o terminal após instalar.
+1. Instale Node.js LTS 22.19 ou superior pelo instalador oficial de https://nodejs.org. Feche e reabra o terminal após instalar.
 2. Obtenha o código da branch `feat/barbearia-exemplo-v1-2` (clone ou ZIP dessa branch, não da main antiga). Extraia o ZIP se necessário.
 3. Abra a pasta que contém `package.json` no Explorador de Arquivos. Digite `powershell` na barra de endereço e pressione Enter.
 4. Instale as dependências:
@@ -90,4 +90,4 @@ Se estiver usando Git, `git check-ignore config.private.json` deve mostrar apena
 
 Se o terminal disser que não conseguiu iniciar, confira se o JSON está válido, se o número está entre aspas e se outro programa ocupa a porta 8788. O programa não imprime o número nem o conteúdo inválido do arquivo nos logs.
 
-O procedimento e as rotinas foram testados no ambiente Linux com Chromium e dados sintéticos temporários. Os comandos Windows usam APIs Node multiplataforma e PowerShell, mas não houve sessão Windows real disponível para validá-los; o teste manual do proprietário continua necessário.
+O proprietário informou que concluiu com sucesso o teste manual no Windows na V1.2.2, incluindo destinatário e mensagens gerais/por serviço. Nesta auditoria, esse teste pessoal não foi repetido nem seu número solicitado. As verificações automatizadas usam Linux/Chromium e dados sintéticos temporários, sem envio de mensagens. As mensagens e o modo privado aprovados foram preservados.

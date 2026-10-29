@@ -7,8 +7,8 @@ const fs = require('node:fs');
 const { execFileSync } = require('node:child_process');
 const { createServer } = require('../scripts/serve.cjs');
 const root = path.resolve(__dirname,'..');
-const output = '/tmp/barbearia-v122-tests';
-const screenshots = '/tmp/barbearia-v122-screenshots';
+const output = '/tmp/barbearia-v123-tests';
+const screenshots = '/tmp/barbearia-v123-screenshots';
 fs.mkdirSync(output,{recursive:true}); fs.mkdirSync(screenshots,{recursive:true});
 const base = require('../config.js');
 
@@ -121,6 +121,7 @@ async function safeFloatingPosition(page) {
           const outline=await page.locator('.skip-link').evaluate(node=>getComputedStyle(node).outlineStyle);
           assert.notEqual(outline,'none');
           await page.keyboard.press('Enter');
+          await page.waitForURL('**/#conteudo');
           assert.equal(new URL(page.url()).hash,'#conteudo');
           if(width<=900) {
             await page.locator('.menu-toggle').focus();

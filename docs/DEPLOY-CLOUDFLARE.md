@@ -14,7 +14,7 @@ O Wrangler declara a saída, mas não define o comando de build do painel do Pag
 | Root directory | Raiz do repositório: vazio ou `/` |
 | Build command | `npm ci --include=dev && npm run build` |
 | Build output directory | `dist` |
-| Versão Node | 22.12+; `.node-version` seleciona Node 22 |
+| Versão Node | 22.19+; `.node-version` seleciona Node 22 |
 | Branch desta correção | `feat/barbearia-exemplo-v1-2` |
 
 Não use `dist` como Root directory. Não use a raiz `.` como saída, pois ela contém o template e não o HTML final personalizado. Não use `npm run preview` como build: esse comando só inicia um servidor local. Não mude a branch de produção nem faça merge automaticamente.

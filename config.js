@@ -1,4 +1,4 @@
-/* CONFIGURAÇÃO PÚBLICA V1.2.2. Sem senhas ou credenciais.
+/* CONFIGURAÇÃO PÚBLICA V1.2.3. Sem senhas ou credenciais.
    Os serviços, preços e horários abaixo são exemplos explicitamente configurados.
    Confirme todos os dados e substitua as fotografias antes da entrega comercial.
    Execute npm run build após qualquer alteração. */
