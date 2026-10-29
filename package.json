@@ -4,10 +4,11 @@
   "private": true,
   "engines": { "node": ">=22.12.0" },
   "scripts": {
-    "build": "node scripts/build.cjs",
+    "build": "node scripts/build.cjs && node scripts/verify-dist.cjs",
     "preview": "node scripts/serve.cjs",
     "test": "node tests/config.cjs && node tests/smoke.cjs",
-    "audit:mobile": "node scripts/audit.cjs"
+    "audit:mobile": "node scripts/audit.cjs",
+    "verify:dist": "node scripts/verify-dist.cjs"
   },
   "devDependencies": {
     "axe-core": "4.10.3",

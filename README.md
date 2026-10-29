@@ -16,6 +16,8 @@ npm run preview
 
 O servidor de desenvolvimento serve **dist/** na porta 8080, somente em loopback; `PORT` permite escolher outra porta. Faça novo build após editar a configuração ou arquivos. Não sirva a raiz como versão final: `index.html` é o template do build, não o produto personalizado.
 
+`npm run build` termina verificando os arquivos publicados e a consistência com `wrangler.jsonc`; falhas deixam código de saída diferente de zero. `npm run verify:dist` repete apenas essa verificação.
+
 O build não acessa APIs remotas. Os avisos `[config]` no terminal informam campos inválidos sem revelar seus valores; a renderização usa padrões seguros e omite recursos opcionais. Uma imagem cadastrada que não existe causa erro de build explícito para impedir links 404 na entrega. A pasta `dist/` é recriada pelo build; não a utilize para arquivos manuais.
 
 ## Estrutura
@@ -29,6 +31,7 @@ O build não acessa APIs remotas. Os avisos `[config]` no terminal informam camp
 | `assets/` | Originais preservados, usados como fallback e fonte de otimização |
 | `scripts/config.cjs` | Normalização e validação da configuração |
 | `scripts/build.cjs` | Geração estática e otimização local com Cheerio/Sharp |
+| `scripts/verify-dist.cjs` | Confere a saída e seus recursos antes da publicação |
 | `scripts/serve.cjs` | Servidor local de teste; não é backend de produção |
 | `scripts/audit.cjs` | Lighthouse mobile local, com relatórios em `/tmp/barbearia-audits` |
 | `tests/` | Validação de configuração e testes reais de navegador |
@@ -139,12 +142,12 @@ A saída continua sendo exclusivamente estática. O build novo precisa ser confi
 
 - Framework: nenhum.
 - Instalação: `npm ci` usando `package-lock.json` (o Pages pode executar instalação automaticamente).
-- Comando de build: **`npm run build`**.
+- Comando de build no Pages: **`npm ci --include=dev && npm run build`**.
 - Diretório de saída: **`dist`**.
 - Node: 22.12+; `.node-version` seleciona a versão principal.
 - Branch de produção: mantenha a atual (`main`) e publique somente após aprovação/merge autorizado.
 
-`wrangler.jsonc` registra `pages_build_output_dir` para ferramentas do Pages. Se o painel ainda estiver com comando vazio e saída `.`, **ajuste esses dois campos antes do deploy da V1.2**. O arquivo não altera sozinho os campos do painel nem configura DNS. Para upload direto manual, envie somente o conteúdo de `dist/`, incluindo `_headers`. Não envie código fonte, testes, documentação ou `node_modules`.
+`wrangler.jsonc` registra `pages_build_output_dir` para ferramentas do Pages. Se o painel ainda estiver com comando vazio, **configure o comando acima antes de repetir o deploy**. A raiz do projeto deve ser a raiz do repositório (campo vazio ou `/`), e não `dist`. O arquivo não altera sozinho os campos do painel nem configura DNS. O erro `Output directory "dist" not found` indica que a etapa de publicação não encontrou a saída; escolher `dist` no Wrangler não executa o build. Veja [diagnóstico e configuração exata](docs/DEPLOY-CLOUDFLARE.md). Para upload direto manual, envie somente o conteúdo de `dist/`, incluindo `_headers`. Não envie código fonte, testes, documentação ou `node_modules`.
 
 Nenhum comando desta tarefa altera a configuração remota, faz deploy ou merge. Uma integração Git já ativa pode gerar previews da branch conforme suas regras; produção não deve ser trocada para esta branch. Deploy e PageSpeed na URL pública precisam de validação após a aprovação do responsável.
 
@@ -175,6 +178,6 @@ Para reproduzir Lighthouse: `node scripts/audit.cjs PASTA LABEL`. Relatórios JS
 - [ ] Modo demonstração desativado e build refeito.
 - [ ] Nome, domínio, SEO, canonical, imagem social e JSON-LD corretos no HTML gerado.
 - [ ] Indexação liberada em meta, `_headers`, robots e sitemap; nenhum dado do modelo remanescente.
-- [ ] Cloudflare Pages com comando `npm run build`, saída `dist` e domínio aprovado.
+- [ ] Cloudflare Pages com comando `npm ci --include=dev && npm run build`, saída `dist`, raiz do repositório e domínio aprovado.
 - [ ] Responsividade, teclado, contraste, foco e movimento reduzido verificados.
 - [ ] Testes locais executados e PageSpeed verificado na URL final após publicação autorizada.
