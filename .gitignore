@@ -4,3 +4,6 @@ playwright-report/
 test-results/
 
 dist/
+
+# Somente no computador do proprietário. Nunca publicar nem versionar.
+config.private.json

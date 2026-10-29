@@ -5,12 +5,17 @@ const crypto = require('node:crypto');
 const cheerio = require('cheerio');
 const sharp = require('sharp');
 const { normalize, string } = require('./config.cjs');
+const { brandIcon } = require('./brand-icon.cjs');
 const root = path.resolve(__dirname, '..');
 const arg = name => { const i = process.argv.indexOf(name); return i < 0 ? '' : process.argv[i + 1]; };
 const output = path.resolve(arg('--out') || path.join(root, 'dist'));
 // Somente diretórios de saída conhecidos podem ser apagados pelo build.
 if (output !== path.join(root, 'dist') && !/^\/tmp\/barbearia-[a-zA-Z0-9_/-]+$/.test(output)) throw new Error('Diretório de saída não permitido.');
-const raw = require(path.resolve(arg('--config') || path.join(root, 'config.js')));
+const configFile = path.resolve(arg('--config') || path.join(root, 'config.js'));
+if (output === path.join(root, 'dist') && configFile !== path.join(root, 'config.js')) {
+  throw new Error('O build de publicação aceita somente config.js; configuração privada não pode gerar dist.');
+}
+const raw = require(configFile);
 const config = normalize(raw);
 const cache = path.join(root, 'node_modules/.cache/barbearia');
 fs.mkdirSync(cache, { recursive: true });
@@ -23,8 +28,8 @@ sharp.concurrency(2);
 (async () => {
   fs.rmSync(output, { recursive: true, force: true });
   fs.mkdirSync(output, { recursive: true });
-  fs.cpSync(path.join(root, 'assets'), path.join(output, 'assets'), { recursive: true });
-  fs.cpSync(path.join(root, 'licenses'), path.join(output, 'licenses'), { recursive: true });
+  fs.cpSync(path.join(root, 'assets'), path.join(output, 'assets'), { recursive: true, filter: file => path.basename(file) !== 'config.private.json' });
+  fs.cpSync(path.join(root, 'licenses'), path.join(output, 'licenses'), { recursive: true, filter: file => path.basename(file) !== 'config.private.json' });
   const $ = cheerio.load(fs.readFileSync(path.join(root, 'index.html'), 'utf8'));
   const iconMarkup = fs.readFileSync(path.join(root, 'assets/icons/whatsapp.svg'), 'utf8');
   function whatsappAction(label, className, message, ariaLabel) {
@@ -267,12 +272,14 @@ sharp.concurrency(2);
   $('head').append($('<script type="application/ld+json">').text(JSON.stringify(schema).replace(/</g,'\\u003c')));
   $('script[src="config.js"]').remove();
   $('link[rel="stylesheet"]').before('<script>document.documentElement.classList.add("js")</script>');
-  const icon = `<svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 64 64"><rect width="64" height="64" rx="12" fill="#151714"/><text x="12" y="48" font-family="Georgia,serif" font-size="44" fill="#c8aa75">${escape(monogram)}</text><path d="m48 8 2 6 6 2-6 2-2 6-2-6-6-2 6-2Z" fill="#c8aa75"/></svg>`;
+  const icon = brandIcon(monogram);
   fs.writeFileSync(path.join(output,'assets/brand-icon.svg'),icon);
-  for (const size of [180,192,512]) await sharp(Buffer.from(icon)).resize(size,size).png().toFile(path.join(output,`assets/icon-${size}.png`));
-  $('link[rel="icon"]').attr('href','assets/brand-icon.svg');
-  $('head').append('<link rel="apple-touch-icon" sizes="180x180" href="assets/icon-180.png"><link rel="manifest" href="manifest.webmanifest">');
-  fs.writeFileSync(path.join(output,'manifest.webmanifest'),JSON.stringify({ name:config.name,short_name:config.name,lang:'pt-BR',start_url:'.',display:'standalone',background_color:'#151714',theme_color:'#151714',icons:[192,512].map(size=>({src:`assets/icon-${size}.png`,sizes:`${size}x${size}`,type:'image/png',purpose:'any'})) },null,2));
+  for (const size of [16,32,48,180,192,512]) await sharp(Buffer.from(icon)).resize(size,size).png().toFile(path.join(output,`assets/icon-${size}.png`));
+  const iconVersion = hash(icon);
+  $('link[rel="icon"]').attr({href:`assets/brand-icon.svg?v=${iconVersion}`,sizes:'any'});
+  for (const size of [16,32,48]) $('head').append($('<link rel="icon" type="image/png">').attr({href:`assets/icon-${size}.png?v=${iconVersion}`,sizes:`${size}x${size}`}));
+  $('head').append(`<link rel="apple-touch-icon" sizes="180x180" href="assets/icon-180.png?v=${iconVersion}"><link rel="manifest" href="manifest.webmanifest">`);
+  fs.writeFileSync(path.join(output,'manifest.webmanifest'),JSON.stringify({ name:config.name,short_name:config.name,lang:'pt-BR',start_url:'.',display:'standalone',background_color:'#151714',theme_color:'#151714',icons:[192,512].map(size=>({src:`assets/icon-${size}.png?v=${iconVersion}`,sizes:`${size}x${size}`,type:'image/png',purpose:'any'})) },null,2));
   fs.writeFileSync(path.join(output,'robots.txt'),`User-agent: *\n${config.demo.enabled ? 'Disallow: /' : 'Allow: /'}\n${!config.demo.enabled && config.siteUrl ? `Sitemap: ${new URL('sitemap.xml',config.siteUrl).href}\n` : ''}`);
   fs.writeFileSync(path.join(output,'sitemap.xml'),`<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">${!config.demo.enabled && config.siteUrl ? `<url><loc>${escape(config.siteUrl)}</loc></url>` : ''}</urlset>\n`);
   fs.writeFileSync(path.join(output,'_headers'),`/*\n${config.demo.enabled ? '  X-Robots-Tag: noindex, nofollow\n' : ''}  X-Content-Type-Options: nosniff\n  Referrer-Policy: strict-origin-when-cross-origin\n  Permissions-Policy: camera=(), microphone=(), geolocation=()\n`);

@@ -7,8 +7,8 @@ const fs = require('node:fs');
 const { execFileSync } = require('node:child_process');
 const { createServer } = require('../scripts/serve.cjs');
 const root = path.resolve(__dirname,'..');
-const output = '/tmp/barbearia-v121-tests';
-const screenshots = '/tmp/barbearia-v121-screenshots';
+const output = '/tmp/barbearia-v122-tests';
+const screenshots = '/tmp/barbearia-v122-screenshots';
 fs.mkdirSync(output,{recursive:true}); fs.mkdirSync(screenshots,{recursive:true});
 const base = require('../config.js');
 
@@ -80,7 +80,7 @@ async function safeFloatingPosition(page) {
       await new Promise(resolve=>server.listen(0,'127.0.0.1',resolve));
       const url=`http://127.0.0.1:${server.address().port}`;
       try {
-        for(const width of [375,390,768,1280]) {
+        for(const width of [375,390,768,1280,1440,1920]) {
           const page=await browser.newPage({viewport:{width,height:900},deviceScaleFactor:1});
           const errors=[];
           page.on('pageerror',error=>errors.push(error.message));
@@ -89,6 +89,26 @@ async function safeFloatingPosition(page) {
           await page.emulateMedia({reducedMotion:'reduce'});
           await page.goto(url,{waitUntil:'networkidle'});
           assert.equal(await page.locator('h1').count(),1);
+          if(label==='model') {
+            const values=await page.locator('.values-strip > span').allTextContents();
+            assert.deepEqual(values,base.content.values);
+            for(const item of await page.locator('.values-strip > span').all()) {
+              const rect=await item.boundingBox(); assert.ok(rect&&rect.x>=0&&rect.x+rect.width<=width);
+            }
+            if(width>=1280) {
+              const alignment=await page.evaluate(()=>{
+                const section=document.querySelector('#servicos');
+                const padding=parseFloat(getComputedStyle(section).paddingLeft);
+                const grid=document.querySelector('.service-grid').getBoundingClientRect();
+                const hero=document.querySelector('.hero-content').getBoundingClientRect();
+                return {padding,left:grid.left,right:innerWidth-grid.right,hero:hero.left,width:grid.width};
+              });
+              assert.ok(Math.abs(alignment.left-alignment.right)<2,'contêiner centralizado');
+              assert.ok(Math.abs(alignment.left-alignment.hero)<2,'hero e serviços alinhados');
+              assert.ok(alignment.width<=1441&&alignment.width>=width*.7,'largura equilibrada');
+            }
+          }
+
           assert.equal(await page.locator('form,input,textarea').count(),0);
           assert.doesNotMatch(await page.locator('body').innerText(),/demonstrativ|ilustrativ|conteúdo fictício|foto conceitual/i);
           assert.ok(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth),`${label} ${width} overflow`);
@@ -124,7 +144,8 @@ async function safeFloatingPosition(page) {
           assert.equal(await page.locator('.whatsapp-float svg.bi-whatsapp').count(),1);
           assert.equal(await page.locator('.service-cta').count(),await page.locator('.service-card').count());
           const color=await page.locator('.whatsapp').evaluate(node=>getComputedStyle(node).backgroundColor);
-          assert.equal(color,'rgb(37, 211, 102)');
+          assert.equal(color,'rgb(21, 23, 20)');
+          if(await page.locator('.service-cta').count()) assert.equal(await page.locator('.service-cta').first().evaluate(node=>getComputedStyle(node).backgroundColor),'rgb(200, 170, 117)');
           if(valid) {
             const href=await page.locator('.whatsapp').getAttribute('href');
             assert.equal(new URL(href).pathname,'/5511999999999');

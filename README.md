@@ -1,8 +1,8 @@
-# Barbearia Exemplo V1.2.1
+# Barbearia Exemplo V1.2.2
 
 Modelo comercial estático, em preto e dourado, com personalização em `config.js`. O build gera HTML completo, SEO, imagens responsivas, imagem de compartilhamento e ícones. A produção não precisa de Node, backend, banco de dados, pagamentos ou serviços pagos obrigatórios. Não existe sistema público de avaliações nem agenda automática.
 
-A V1.2.1 continua na branch `feat/barbearia-exemplo-v1-2`, preservando V1.1, V1.2 e a correção de build. Nenhuma outra branch, merge ou publicação direta em produção é necessária. O estado de integração deve ser conferido no PR antes de aprovar o merge.
+A V1.2.2 continua na branch `feat/barbearia-exemplo-v1-2`, preservando V1.1, V1.2 e a correção de build. Nenhuma outra branch, merge ou publicação direta em produção é necessária. O estado de integração deve ser conferido no PR antes de aprovar o merge.
 
 ## Desenvolvimento e build
 
@@ -33,6 +33,9 @@ O build não acessa APIs remotas. Os avisos `[config]` no terminal informam camp
 | `scripts/build.cjs` | Geração estática e otimização local com Cheerio/Sharp |
 | `scripts/verify-dist.cjs` | Confere a saída e seus recursos antes da publicação |
 | `scripts/serve.cjs` | Servidor local de teste; não é backend de produção |
+| `scripts/private-preview.cjs` | Prévia privada exclusivamente em loopback, com injeção em memória |
+| `scripts/brand-icon.cjs` | Monograma vetorial e favicon independente de fonte para a letra B |
+| `config.private.example.json` | Exemplo vazio para teste pessoal local |
 | `scripts/audit.cjs` | Lighthouse mobile local, com relatórios em `/tmp/barbearia-audits` |
 | `tests/` | Validação de configuração e testes reais de navegador |
 | `dist/` | Saída gerada, ignorada pelo Git; apenas esta pasta é publicada |
@@ -52,7 +55,7 @@ O único campo comercial recomendado como obrigatório é `name`. Uma configura�
 | `address` | Endereço textual confirmado, sem geocodificação automática |
 | `siteUrl` | URL HTTPS oficial, com caminho base se necessário; canonical, OG, sitemap e JSON-LD |
 | `description` | Meta description, Open Graph, Twitter e descrição estruturada |
-| `whatsapp` | Número comercial confirmado; sem valor válido não há links de contato funcional |
+| `whatsapp` | Somente número comercial público confirmado; nunca use aqui um número pessoal de teste |
 | `whatsappMessage` | Mensagem genérica das chamadas gerais e do botão flutuante |
 | `whatsappUnavailableMessage` | Aviso sem número; padrão “WhatsApp disponível em breve” |
 | `serviceMessage` | Mensagem por serviço; `{service}` é substituído pelo nome do cartão |
@@ -82,7 +85,15 @@ Use número brasileiro com DDD ou com DDI 55; espaços, parênteses e hífens s�
 
 Sem número válido, o botão geral, os botões por serviço e o flutuante são **botões verdes funcionais**, sem URL nem telefone. Ao clicar, mostram `whatsappUnavailableMessage` em um aviso não modal com região de status acessível. O aviso fecha pelo mesmo botão, pelo controle de fechar, por Escape, por clique externo ou quando o foco segue para outro controle. O botão que abriu o aviso recupera o foco ao fechar pelo controle ou por Escape. Com JavaScript desativado, o bloco de agendamento mostra a mensagem via `noscript`; a interação do aviso requer JavaScript.
 
-Com número válido, os links usam `https://wa.me/`, texto codificado, nova aba e `noopener noreferrer`. Eles não enviam a mensagem sozinhos nem garantem agendamento. Os botões e o flutuante usam verde `#25D366` com texto/ícone escuros para contraste AA, SVG reconhecível, foco visível e feedback de hover/toque. O flutuante respeita a safe area, tem alvo de 54px e sai de cena quando o agendamento ou rodapé se aproximam da tela, ou quando sua posição se sobrepõe a texto e controles importantes. Há espaço inferior no celular e alternativa sem JavaScript.
+Com número válido, os links usam `https://wa.me/`, texto codificado, nova aba e `noopener noreferrer`. Eles não enviam a mensagem sozinhos nem garantem agendamento. Os cards usam botões dourados com ícone/texto pretos; a faixa dourada usa botão preto com texto claro. Somente o flutuante mantém o verde `#25D366`. Todos preservam o SVG, contraste AA, foco e feedback de hover/toque. O flutuante respeita a safe area, tem alvo de 54px e sai de cena quando o agendamento ou rodapé se aproximam da tela, ou quando sua posição se sobrepõe a texto e controles importantes. Há espaço inferior no celular e alternativa sem JavaScript.
+
+### Teste pessoal privado, exclusivamente local
+
+**Não coloque um número pessoal em config.js, GitHub, HTML ou Cloudflare.** Use `config.private.json` no seu próprio computador, a partir de `config.private.example.json` vazio. Esse arquivo é ignorado pelo Git e não é lido pelo build de produção. O comando `npm run preview:private` faz o build público e inicia o servidor em 127.0.0.1:8788. A substituição do contato acontece apenas no navegador local, por uma resposta em memória com cache desativado; nada é escrito em dist. Não se trata de uma prévia pública protegida por autenticação.
+
+Veja o [passo a passo para iniciantes no Windows](docs/TESTE-PRIVADO-WINDOWS.md). No PowerShell, utilize `npm.cmd run preview:private`. Encerre com Ctrl+C e remova o arquivo pessoal depois do teste. Os links oficiais ainda abrem o serviço WhatsApp; não compartilhe as URLs ou capturas contendo seu número.
+
+O build de publicação bloqueia `--config` alternativo para dist e exclui `config.private.json` da cópia de recursos. As opções de configuração usadas por testes automatizados só podem gerar saídas temporárias, não dist. O servidor privado escuta somente em loopback, usa endpoint temporário imprevisível e rejeita Host/Origin externos e requisições cross-site. Qualquer pessoa com acesso ao seu computador/arquivo local ainda poderá lê-lo; não publique ou compartilhe a pasta privada.
 
 ### Avaliações — manutenção exclusiva do desenvolvedor
 
@@ -112,7 +123,7 @@ Para um cliente real, use `demo.enabled: false` e refaça o build. A seção com
 
 ## Imagens, licença e compartilhamento
 
-`assets/barbearia.jpg` é a imagem original gerada pela ferramenta OpenAI na V1, de 1536×1024. Não é uma fotografia de um estabelecimento real. A V1.2.1 preserva seus bytes e o favicon original. A galeria exibe apenas uma entrada única, sem usar dois recortes da mesma imagem como variedade. Não foi criada nenhuma nova fotografia. Direitos sujeitos aos termos aplicáveis da OpenAI; não há pressuposição de exclusividade. **Antes da entrega comercial, substitua as imagens do modelo por fotografias autorizadas do estabelecimento**, registre autoria/licença e não apresente a imagem gerada como registro de uma barbearia específica.
+`assets/barbearia.jpg` é a imagem original gerada pela ferramenta OpenAI na V1, de 1536×1024. Não é uma fotografia de um estabelecimento real. A V1.2.2 preserva seus bytes e o favicon original. A galeria exibe apenas uma entrada única, sem usar dois recortes da mesma imagem como variedade. Não foi criada nenhuma nova fotografia. Direitos sujeitos aos termos aplicáveis da OpenAI; não há pressuposição de exclusividade. **Antes da entrega comercial, substitua as imagens do modelo por fotografias autorizadas do estabelecimento**, registre autoria/licença e não apresente a imagem gerada como registro de uma barbearia específica.
 
 Cadastre `images.hero` com `{ src, alt }`; `images.gallery` aceita até quatro objetos `{ src, alt, caption }` com arquivos distintos. Entradas que repetem o mesmo `src` são descartadas com aviso no build. Não reutilize fotos em outros arquivos ou recortes para simular variedade. A grade adapta uma, duas, três ou quatro imagens, sem espaços reservados vazios. Use caminhos em `assets/`, sem `..`, URLs externas ou symlinks para fora dessa pasta. Formatos: JPG/JPEG, PNG, WebP e AVIF. O build lê as dimensões reais, usa originais como fallback e cria derivados WebP/AVIF até 480, 768, 1200 e 1600px, sem ultrapassar a largura original; inclui a largura original quando ela não coincide com as faixas. Não edite os derivados manualmente.
 
@@ -129,9 +140,9 @@ Pesos medidos para a imagem atual (bytes, sem arredondar para KiB):
 
 Na largura original, o AVIF é cerca de 75% menor que o JPEG. O peso realmente transferido depende da largura, DPR, formato e cache do navegador; isso não é uma promessa de PageSpeed. O relatório exato de cada build está em `dist/image-report.json`.
 
-O build cria **assets/og-image.jpg, 1200×630**, recortando exclusivamente o hero atual e sobrepondo nome/slogan em preto e dourado. Para atualizar, troque a foto em `images.hero`, nome e slogan e rode o build. A imagem anterior é regenerada automaticamente. Também gera `brand-icon.svg` com monograma e estrela, Apple Touch Icon 180px, PNGs 192/512 e manifest. Os originais não são apagados.
+O build cria **assets/og-image.jpg, 1200×630**, recortando exclusivamente o hero atual e sobrepondo nome/slogan em preto e dourado. Para atualizar, troque a foto em `images.hero`, nome e slogan e rode o build. A imagem anterior é regenerada automaticamente. Também gera `brand-icon.svg` com B vetorial e estrela (outros nomes usam a inicial configurada), PNGs 16/32/48, Apple Touch Icon 180px, PNGs 192/512 e manifest. Os links de ícone recebem versão baseada no conteúdo para evitar cache antigo. O logotipo do cabeçalho é preservado. Os originais não são apagados.
 
-### Fotografias adicionais e licença do ícone (V1.2.1)
+### Fotografias adicionais e licença do ícone
 
 Nenhuma fotografia nova foi incorporada nesta correção. O acesso ao CDN do Unsplash, à API do Wikimedia Commons e ao servidor de arquivos Wikimedia retornou `403 Forbidden` no proxy do ambiente. Sem arquivos e autorização verificáveis, foi aplicada a alternativa segura prevista no pedido: galeria preparada para quatro fotos autorizadas, com apenas o original único disponível. Essa limitação não foi mascarada por recortes, arquivos fictícios ou imagens de IA novas.
 
@@ -171,9 +182,9 @@ npm run audit:mobile
 
 Playwright utiliza Chromium do ambiente em `/usr/bin/chromium`; configure `CHROMIUM_PATH` para outro caminho. Se necessário em uma máquina nova, instale Chromium pelo gerenciador oficial ou execute `npx playwright install chromium` e informe o caminho. Lighthouse usa o mesmo binário. Testes são somente de desenvolvimento.
 
-A suíte cria builds temporários isolados em `/tmp/barbearia-v121-tests` e testa modelo, cliente completo, demonstração com contato, configuração mínima, configuração inválida e nota 4,0 em **375, 390, 768 e 1280px**. Verifica teclado, foco, menu, links internos, normalização e mensagem por serviço do WhatsApp, botão flutuante e rodapé, avaliações fracionárias/ausentes, modo demo, SEO no HTML, robots/sitemap, originais intactos, imagens responsivas, erros JavaScript e 404. O mapa e as navegações externas de WhatsApp dos testes são interceptados localmente: não comprovam disponibilidade de um mapa de cliente nem atendimento do número. Não há envio de mensagens ou avaliações. A personalização completa substitui nome, slogan, textos, serviços, preços, horários, contato, mapa, redes e metadados, verificando ausência dos dados anteriores no HTML.
+A suíte cria builds temporários isolados em `/tmp/barbearia-v122-tests` e testa modelo, cliente completo, demonstração com contato, configuração mínima, configuração inválida e nota 4,0 em **375, 390, 768, 1280, 1440 e 1920px**. Verifica teclado, foco, menu, links internos, normalização e mensagem por serviço do WhatsApp, botão flutuante e rodapé, avaliações fracionárias/ausentes, modo demo, SEO no HTML, robots/sitemap, originais intactos, imagens responsivas, erros JavaScript e 404. O mapa e as navegações externas de WhatsApp dos testes são interceptados localmente: não comprovam disponibilidade de um mapa de cliente nem atendimento do número. Não há envio de mensagens ou avaliações. A personalização completa substitui nome, slogan, textos, serviços, preços, horários, contato, mapa, redes e metadados, verificando ausência dos dados anteriores no HTML.
 
-Axe-core verifica WCAG A/AA básico e contraste em todos os cenários/larguras. A suíte testa movimento reduzido e conteúdo sem JavaScript. Capturas ficam em `/tmp/barbearia-v121-screenshots`, incluindo avisos abertos. Isso não substitui teste manual com leitor de tela, titularidade do contato ou verificação humana de avaliações e dados comerciais.
+São 36 cenários públicos, além de seis cenários privados com dados sintéticos temporários. O teste privado compara todos os bytes da saída, verifica ausência do contato nos artefatos/logs, Git ignore, rejeição de override para dist e isolamento HTTP local. Nenhum número pessoal é necessário para executar a suíte. Axe-core verifica WCAG A/AA básico e contraste nos cenários públicos, inclusive com o aviso aberto. A suíte testa movimento reduzido e conteúdo sem JavaScript. Capturas ficam em `/tmp/barbearia-v122-screenshots`, incluindo avisos abertos. Isso não substitui teste manual com leitor de tela, titularidade do contato ou verificação humana de avaliações e dados comerciais.
 
 Para reproduzir Lighthouse: `node scripts/audit.cjs PASTA LABEL`. Relatórios JSON/HTML em `/tmp/barbearia-audits`; medidas locais com simulação mobile, não PageSpeed de produção. Registre os valores efetivamente medidos na entrega; a demonstração recebe penalidade SEO intencional pelo noindex. A indexação real e os cartões de compartilhamento ainda precisam de teste no domínio publicado.
 

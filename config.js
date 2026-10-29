@@ -1,4 +1,4 @@
-/* CONFIGURAÇÃO PÚBLICA V1.2.1. Sem senhas ou credenciais.
+/* CONFIGURAÇÃO PÚBLICA V1.2.2. Sem senhas ou credenciais.
    Os serviços, preços e horários abaixo são exemplos explicitamente configurados.
    Confirme todos os dados e substitua as fotografias antes da entrega comercial.
    Execute npm run build após qualquer alteração. */
@@ -7,7 +7,8 @@ module.exports = {
   slogan: 'Seu estilo. Nossa assinatura.',
   city: '', state: '', country: '', address: '', siteUrl: '',
   description: 'Corte, barba e cuidado com atenção a cada detalhe. Conheça os serviços da {name} e consulte a disponibilidade de horários.',
-  whatsapp: '', // DDD + número brasileiro, 55 + DDD + número, ou internacional com +.
+  whatsapp: '', // SOMENTE número comercial público confirmado. Para teste pessoal use config.private.json.
+  // DDD + número brasileiro, 55 + DDD + número, ou internacional com +.
   whatsappMessage: 'Olá! Gostaria de consultar os horários disponíveis para agendar um atendimento.',
   whatsappUnavailableMessage: 'WhatsApp disponível em breve',
   serviceMessage: 'Olá! Gostaria de agendar um {service}. Quais horários estão disponíveis?',

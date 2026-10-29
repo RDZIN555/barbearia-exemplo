@@ -1,12 +1,13 @@
 {
   "name": "barbearia-exemplo",
-  "version": "1.2.1",
+  "version": "1.2.2",
   "private": true,
   "engines": { "node": ">=22.12.0" },
   "scripts": {
     "build": "node scripts/build.cjs && node scripts/verify-dist.cjs",
     "preview": "node scripts/serve.cjs",
-    "test": "node tests/config.cjs && node tests/smoke.cjs",
+    "preview:private": "npm run build && node scripts/private-preview.cjs",
+    "test": "node tests/config.cjs && node tests/smoke.cjs && node tests/private-preview.cjs",
     "audit:mobile": "node scripts/audit.cjs",
     "verify:dist": "node scripts/verify-dist.cjs"
   },

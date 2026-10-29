@@ -1,20 +1,17 @@
-# Barbearia Exemplo V1.2.1 — personalização, WhatsApp e auditoria final
+# Barbearia Exemplo V1.2.2 — acabamento visual e teste local privado
 
-Preserva o site premium e as melhorias V1.1/V1.2, com build estático, SEO gerado no HTML e configuração comercial centralizada. Os ajustes finais tornam o WhatsApp reconhecível e funcional também antes de cadastrar um número, sem contatos fictícios.
+Preserva o site e as melhorias V1.1/V1.2/V1.2.1, com build estático, configuração comercial, SEO no HTML, avaliações exclusivamente manuais e verificação dos artefatos. O acabamento harmoniza o WhatsApp com a identidade premium e permite testar um contato pessoal apenas no computador do proprietário.
 
-- Botões gerais, por serviço e flutuante verdes (#25D366), com ícone SVG reconhecível, contraste AA, foco, hover/toque e área adequada.
-- Com número: normalização internacional, mensagem geral ou com nome do serviço, link oficial e nova aba com noopener noreferrer.
-- Sem número: botões mostram mensagem configurável em aviso acessível, com fechamento por repetição, controle, Escape e interação externa. Sem link falso nem janela de erro.
-- Avaliações permanecem exclusivamente manuais e verificadas, com estrelas proporcionais e sem qualquer formulário público.
-- Personalização de nome, slogan, textos, serviços/preços, horários, contato, mapa, redes, reviews, demo, domínio e SEO auditada sem editar HTML.
-- Build e verificador de dist preservados; nenhuma mudança em configuração remota do Cloudflare.
+- Botões de serviço dourados com ícone preto; faixa dourada com botão preto e texto legível. Só o flutuante móvel permanece verde, com foco, hover, mensagens e resposta sem número preservados.
+- Contêineres e hero alinhados em 1280/1440/1920, conteúdo até 1440px, imagem principal full width e sem distorção. Cards/preços maiores, textos de contato e faixa de valores refinados sem reconstrução.
+- Favicon B vetorial com pequena estrela, PNGs 16/32/48 e ícones relacionados gerados, sem dependência de fonte para B. Cabeçalho preservado.
+- Modo privado: config.private.json ignorado pelo Git, exemplo vazio e npm run preview:private. Servidor somente em loopback, injeção de contato em memória, cache desativado e restrições de Host/Origin/cross-site; nenhum dado pessoal em dist ou no config.js público.
+- O build de publicação continua npm ci --include=dev && npm run build, saída dist, e recusa override privado para essa saída. Nenhuma configuração do Cloudflare ou deploy direto em produção foi alterado.
 
-**Limitação de fotos:** nenhuma fotografia adicional foi incorporada. Unsplash e Wikimedia retornaram HTTP 403 no proxy; não foram usadas imagens sem autorização nem geradas novas fotos por IA. O original e o hero permanecem idênticos. A galeria mantém uma entrada única, sem o segundo recorte repetido, e aceita até quatro fotos distintas quando fornecidas com autorização. Isso segue a alternativa prevista no pedido, mas quatro fotografias ainda são uma pendência de conteúdo.
+**Galeria:** fontes consultadas continuam bloqueadas por HTTP 403. Nenhuma fotografia nova foi adicionada sem autorização ou gerada por IA. Original e hero preservados; uma foto única exibida, estrutura para quatro. Faltam três fotografias distintas autorizadas. A licença MIT do ícone WhatsApp continua incluída.
 
-O único visual novo é o ícone WhatsApp do Bootstrap Icons 1.11.3, licença MIT integral em licenses/bootstrap-icons-MIT.txt, incluída na publicação. A imagem original continua com sua procedência documentada.
+**Privacidade e entrega:** nenhum número pessoal foi fornecido/solicitado nesta tarefa; testes usam somente fixtures sintéticas temporárias e wa.me interceptado. O guia docs/TESTE-PRIVADO-WINDOWS.md explica o uso do próprio número apenas localmente, sem GitHub/Cloudflare, e sua remoção. Windows real e deploy remoto não foram executados; não confundir prévia pública com ambiente privado.
 
-**Validação V1.2.1:** instalação/build limpos com `npm ci --include=dev && npm run build`, artefatos de dist conferidos; testes de configuração e 24 cenários reais de navegador (6 configurações × 375/390/768/1280), teclado/menu/foco, aviso sem número, cliques com nova aba interceptada localmente, avaliações 4,0/4,5, imagens, SEO, contraste via axe, ausência de JS errors/404/overflow. Sem mensagens enviadas a terceiros. Relatório: docs/VALIDACAO-V1.2.1.md. Não há nova medição Lighthouse nesta correção.
+Validação e lista de arquivos: docs/VALIDACAO-V1.2.2.md. Testes públicos nas seis larguras com menu, foco, contraste/axe, valores, alinhamento, galeria, avaliações, SEO e ausência de erros/404/overflow. Testes privados com comparação de todos os bytes de dist, ausência do contato em artefatos/logs, ignore, override de produção, HTTP local e navegação segura por mensagem genérica/serviço/flutuante.
 
-**Base:** main observada permanece em 87a5e39; a branch inclui V1.1 e V1.2 ainda não integradas. O diff para main inclui essas melhorias. Conferir a dependência antes da integração. Trabalhar na mesma branch feat/barbearia-exemplo-v1-2; sem merge automático ou publicação direta em produção.
-
-Cloudflare Pages: raiz do repositório, build `npm ci --include=dev && npm run build`, saída `dist`, Node 22.12+. Não mudar a branch de produção para esta branch de revisão.
+A branch inclui V1.1/V1.2 ainda não integradas à main observada anteriormente. Conferir a base no GitHub antes de aprovar a integração. Sem nova branch, merge automático ou publicação direta em produção.

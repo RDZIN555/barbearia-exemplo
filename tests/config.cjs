@@ -33,3 +33,8 @@ assert.deepEqual(gallery.map(item=>item.src),['assets/one.jpg','assets/two.jpg',
 assert.equal(normalize({},()=>{}).whatsappUnavailableMessage,'WhatsApp disponível em breve');
 assert.equal(normalize({whatsappUnavailableMessage:'Mensagem própria'},()=>{}).whatsappUnavailableMessage,'Mensagem própria');
 console.log('PASS gallery: até quatro referências distintas; aviso sem número configurável');
+
+const {brandIcon}=require('../scripts/brand-icon.cjs');
+assert.ok(!brandIcon('B').includes('<text'),'B vetorial sem fonte externa');
+assert.ok(brandIcon('B').includes('fill-rule="evenodd"'));
+console.log('PASS favicon: monograma B vetorial independente de fontes');

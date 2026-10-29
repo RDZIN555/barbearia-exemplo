@@ -40,7 +40,7 @@ if (floating) {
     if (floating.hidden) return;
     const box = floating.getBoundingClientRect();
     if (!box.width) return;
-    const important = document.querySelectorAll('h1,h2,h3,p,dt,dd,figcaption,.button,.text-link');
+    const important = document.querySelectorAll('h1,h2,h3,p,dt,dd,figcaption,.button,.text-link,.values-strip > span');
     let covered = false;
     for (const node of important) {
       if (!intersects(box,node.getBoundingClientRect())) continue;
