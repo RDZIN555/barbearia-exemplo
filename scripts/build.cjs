@@ -209,11 +209,13 @@ sharp.concurrency(2);
   if (!config.hours.length) $('.hours').remove();
   const hasLocation = Boolean(config.address);
   $('.location-card').attr('data-location',hasLocation ? 'configured' : 'pending');
-  $('.location-card h3').text(copy(hasLocation ? contact.locationTitle : contact.pendingTitle, hasLocation ? 'Nosso endereço' : 'Localização a definir'));
+  $('.location-card h3').text(copy(hasLocation ? contact.locationTitle : contact.pendingTitle, hasLocation ? 'Nosso endereço' : 'Sua barbearia aqui.'));
   if (config.address) $('#business-address').text(config.address); else $('#business-address').remove();
+  if (hasLocation) $('.location-preview-art').remove();
+  else $('.location-icon').remove();
   const area = [config.neighborhood,config.city,config.state].filter(Boolean).join(' · ');
   if (area) $('.business-city').text(area); else $('.business-city').remove();
-  if (!hasLocation) $('.location-pending').text(copy(contact.pendingDescription,'Endereço, bairro e cidade serão apresentados aqui.')); else $('.location-pending').remove();
+  if (!hasLocation) $('.location-pending').text(copy(contact.pendingDescription,'Seu endereço, sua identidade e o caminho até você. Tudo em um só lugar.')); else $('.location-pending').remove();
   // A rota e o mapa só aparecem junto de uma localização cadastrada.
   if (hasLocation && config.mapa.link) { link($('#map-link'),config.mapa.link); $('#map-link').removeAttr('hidden'); } else $('#map-link').remove();
   if (copy(contact.locationLabel) && hasLocation) $('.location-label').text(contact.locationLabel); else $('.location-label').remove();

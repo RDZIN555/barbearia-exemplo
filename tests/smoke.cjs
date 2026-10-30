@@ -250,8 +250,10 @@ async function safeFloatingPosition(page) {
           if(!located) {
             assert.equal(await page.locator('#map-link,iframe,#business-address').count(),0);
             assert.ok(await page.locator('.location-pending').isVisible());
+            assert.equal(await page.locator('.location-preview-art').count(),1);
           }
           if(label==='full') {
+            assert.equal(await page.locator('.location-preview-art').count(),0);
             assert.equal(await page.locator('.brand-logo').count(),2);
             assert.equal(await page.locator('html').evaluate(node=>getComputedStyle(node).getPropertyValue('--panel').trim()),'#20231e');
             assert.match(await page.locator('.business-city').innerText(),/Bairro de Teste/);

@@ -1405,3 +1405,20 @@ footer { padding-top: 42px; }
   .booking h2 { font-size: 38px; }
   .booking-action { margin-top: 27px; }
 }
+
+
+/* V1.3.1 — composição abstrata original, sem geografia ou rota simulada. */
+.location-card[data-location="pending"] { position: relative; overflow: hidden; min-height: 328px; justify-content: flex-end; }
+.location-preview-art { position: absolute; inset: 0; width: 100%; height: 100%; color: var(--gold); pointer-events: none; }
+.location-art-lines { opacity: .18; }
+.location-art-orbit { opacity: .22; }
+.location-art-marker { opacity: .85; }
+.location-art-accent { opacity: .7; }
+.location-card[data-location="pending"] .location-info { position: relative; padding-top: 150px; }
+.contact .location-card[data-location="pending"] h3 { font-size: clamp(28px,2.6vw,36px); margin-bottom: 13px; }
+.location-card[data-location="pending"] .location-pending { max-width: 34ch; margin-bottom: 0; }
+@media (max-width: 600px) {
+  .location-card[data-location="pending"] { min-height: 296px; }
+  .location-card[data-location="pending"] .location-info { padding-top: 132px; }
+  .contact .location-card[data-location="pending"] h3 { font-size: 29px; }
+}

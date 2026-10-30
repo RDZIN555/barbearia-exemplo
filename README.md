@@ -115,7 +115,7 @@ Sem conjunto verificado e sem nota válida ou depoimentos autorizados, a seção
 
 `address` confirmado e `mapa.link` HTTPS ativam “Como chegar”. A URL precisa apontar para a rota real escolhida pelo cliente; não há inferência de coordenadas nem geocodificação automática. `mapa.embed` deve conter a URL de incorporação, não a tag iframe. Fontes aceitas: `https://www.google.com/maps/embed...` e `https://www.openstreetmap.org/export/embed.html...`, sem portas alternativas, credenciais ou host semelhante. Outras origens são rejeitadas. O iframe tem título acessível, carregamento lazy e só existe quando há endereço cadastrado e URL válida. O carregamento envia uma requisição ao provedor do mapa; revise as obrigações de privacidade aplicáveis ao cliente antes de habilitá-lo. Nenhum mapa externo está ativado no modelo.
 
-Sem endereço, o cartão compacto mostra “Localização a definir”, com texto em `content.contact.pendingTitle` e `pendingDescription`. Não há mapa nem botão de rota, mesmo que uma URL tenha sido preenchida isoladamente. Bairro/cidade/estado confirmados podem ser apresentados enquanto o endereço completo está pendente. Com endereço e sem mapa, aparece apenas a informação cadastrada; horários vazios não reservam coluna. `content.contact.hoursNote` permite personalizar a observação do atendimento. Não use endereços ou coordenadas de terceiros como placeholders.
+Sem endereço, o cartão compacto mostra “Sua barbearia aqui.” com uma composição SVG abstrata original, sem geografia, nomes de ruas ou coordenadas, com texto em `content.contact.pendingTitle` e `pendingDescription`. Não há mapa nem botão de rota, mesmo que uma URL tenha sido preenchida isoladamente. Bairro/cidade/estado confirmados podem ser apresentados enquanto o endereço completo está pendente. Com endereço e sem mapa, aparece apenas a informação cadastrada; horários vazios não reservam coluna. `content.contact.hoursNote` permite personalizar a observação do atendimento. Não use endereços ou coordenadas de terceiros como placeholders.
 
 ### Modo comercial de demonstração
 
@@ -215,3 +215,9 @@ Para reproduzir Lighthouse: `node scripts/audit.cjs PASTA LABEL`. Relatórios JS
 A jornada coloca serviços e fotos antes de localização/horários e da chamada final. O hero permite consultar diretamente o WhatsApp, com a mesma mensagem geral e o mesmo comportamento seguro quando o contato não está configurado. A prévia privada também inclui esse novo botão; não altere `config.private.json` para fazer o build público. As mensagens dos serviços e o tamanho de 54px do flutuante permanecem preservados.
 
 Veja a [pesquisa visual](docs/REFERENCIAS-V1.3.md) e a [validação e auditoria crítica](docs/VALIDACAO-V1.3.md). Avaliações e Instagram continuam condicionados a dados reais; optou-se por não criar uma seção de equipe vazia nem inventar profissionais. Preços, duração, horários e textos do modelo são configuráveis e devem ser confirmados com o cliente antes da entrega.
+
+### V1.3.1 — cartão de localização
+
+A arte demonstrativa e seu marcador são removidos automaticamente do HTML quando `address` é preenchido. O estado com endereço mantém texto, bairro/cidade, mapa e rota conforme os dados válidos cadastrados. Nenhuma regra de segurança ou configuração privada foi alterada.
+
+Além de `npm test`, execute `npm run test:location` para conferir cinco estados de localização nas larguras 375/390/768/1280/1440px. Os dados de endereço usados são fixtures sintéticas temporárias, com mapas interceptados, sem consulta a estabelecimentos reais. Detalhes em [validação V1.3.1](docs/VALIDACAO-V1.3.1.md).
