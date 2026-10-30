@@ -250,7 +250,17 @@ async function safeFloatingPosition(page) {
           }
           const gallerySources=await page.locator('.gallery img').evaluateAll(nodes=>nodes.map(n=>n.getAttribute('src')));
           assert.equal(new Set(gallerySources).size,gallerySources.length,'sem fotos repetidas');
-          if(label==='model') assert.equal(gallerySources.length,1);
+          if(label==='model') {
+            assert.equal(gallerySources.length,4);
+            assert.equal(await page.locator('.gallery-grid').getAttribute('data-count'),'4');
+            for(const photo of base.images.gallery) assert.ok(gallerySources.includes(photo.src));
+            for(const image of await page.locator('.gallery img').all()) {
+              assert.equal(await image.getAttribute('loading'),'lazy');
+              assert.ok(Number(await image.getAttribute('width'))>0 && Number(await image.getAttribute('height'))>0);
+              assert.ok(await image.getAttribute('alt'));
+              assert.ok(!(await image.getAttribute('src')).startsWith('http'));
+            }
+          }
           const reduced=await page.locator('html').evaluate(node=>getComputedStyle(node).scrollBehavior);
           assert.equal(reduced,'auto');
           await page.evaluate(()=>{document.activeElement.blur();scrollTo(0,0);});

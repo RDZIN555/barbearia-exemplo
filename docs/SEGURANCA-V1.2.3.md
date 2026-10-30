@@ -37,4 +37,4 @@ As versões nativas observadas após a atualização foram Sharp 0.35.5, libvips
 
 O npm não reportou vulnerabilidades conhecidas na consulta desta execução; isso não é garantia sobre vulnerabilidades futuras ou pacotes do sistema operacional. A ausência de dependências npm em produção limita a exposição do site estático, mas o computador de desenvolvimento continua executando ferramentas e processando arquivos. Repetir a auditoria em atualizações futuras.
 
-A galeria ainda não pode ser aprovada: os três arquivos não estão acessíveis ao executor e o acesso às fontes Pexels está bloqueado. Origem, correspondência e condições da licença precisam ser confirmadas antes de incorporar as fotos. A pendência de conteúdo não foi ocultada pelo resultado npm.
+A pendência da galeria foi resolvida na continuação: as fontes oficiais ficaram acessíveis, a licença foi verificada e o proprietário autorizou usar as três fotos oficiais após informar a divergência dos anexos. Fontes e condições em FONTES-FOTOGRAFIAS-V1.2.3.md. A auditoria npm final permaneceu em zero; isso não substitui cumprir as condições da licença ou a aprovação do proprietário.

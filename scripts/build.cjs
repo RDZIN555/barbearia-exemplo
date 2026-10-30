@@ -50,7 +50,7 @@ sharp.concurrency(2);
     if (!fs.realpathSync(file).startsWith(fs.realpathSync(path.join(root, 'assets')) + path.sep)) throw new Error('Imagem fora de assets.');
     const input = fs.readFileSync(file);
     const meta = await sharp(input).metadata();
-    const widths = [...new Set([480,768,1200,1600,meta.width].filter(width => width <= meta.width))].sort((a,b) => a-b);
+    const widths = [...new Set([480,768,1200,1600,Math.min(meta.width,1600)].filter(width => width <= meta.width))].sort((a,b) => a-b);
     const variants = { webp: [], avif: [] };
     const id = hash(Buffer.concat([input, Buffer.from(`quality76-avif45-${imageEngine}`)]));
     for (const width of widths) {
@@ -68,10 +68,10 @@ sharp.concurrency(2);
     report.push({ original:info.src, originalBytes:input.length, width:meta.width, height:meta.height, variants });
     return result;
   }
-  async function picture(info, hero = false) {
+  async function picture(info, hero = false, layout = 'standard') {
     const asset = await photo(info);
     const element = $('<picture>');
-    const sizes = hero ? '100vw' : '(max-width: 600px) 88vw, (max-width: 900px) 55vw, 55vw';
+    const sizes = hero ? '100vw' : layout === 'wide' ? '(min-width: 1600px) 1440px, 90vw' : layout === 'third' ? '(max-width: 600px) 88vw, (min-width: 1600px) 470px, 30vw' : '(max-width: 600px) 88vw, 55vw';
     for (const format of ['avif','webp']) element.append($('<source>').attr({ type:`image/${format}`, srcset:asset.variants[format].map(v => `${v.src} ${v.width}w`).join(', '), sizes }));
     const image = $('<img>').attr({ src:info.src, alt:info.alt, width:asset.width, height:asset.height, decoding:'async', loading:hero ? 'eager' : 'lazy' });
     if (hero) image.attr('fetchpriority', 'high');
@@ -145,7 +145,7 @@ sharp.concurrency(2);
   $('.gallery-grid').empty().attr('data-count',config.images.gallery.length);
   for (const [i,info] of config.images.gallery.entries()) {
     const figure = $('<figure>').addClass(i === 0 ? 'gallery-main' : '');
-    figure.append(await picture(info));
+    figure.append(await picture(info,false,config.images.gallery.length === 4 ? (i === 0 ? 'wide' : 'third') : 'standard'));
     if (info.caption) figure.append($('<figcaption>').text(info.caption));
     $('.gallery-grid').append(figure);
   }
@@ -288,5 +288,5 @@ sharp.concurrency(2);
   fs.writeFileSync(path.join(output,'index.html'),$.html());
   fs.writeFileSync(path.join(output,'image-report.json'),JSON.stringify(report,null,2));
   console.log(`Build concluído: ${output}. Modo ${config.demo.enabled ? 'demonstração (noindex)' : 'cliente'}.`);
-  for(const item of report) console.log(`Imagem ${item.original}: original ${item.originalBytes} bytes; WebP ${item.variants.webp.at(-1).bytes}; AVIF ${item.variants.avif.at(-1).bytes} (largura ${item.width}).`);
+  for(const item of report) console.log(`Imagem ${item.original}: original ${item.originalBytes} bytes; WebP ${item.variants.webp.at(-1).bytes}; AVIF ${item.variants.avif.at(-1).bytes} (derivados até ${item.variants.avif.at(-1).width}px; original ${item.width}x${item.height}).`);
 })().catch(error => { console.error('Build não concluído:',error.message); process.exitCode=1; });

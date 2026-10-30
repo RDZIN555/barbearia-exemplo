@@ -1,25 +1,27 @@
-# Fontes recebidas para a galeria V1.2.3 — ainda não incorporadas
+# Fontes verificadas e incorporadas — galeria V1.2.3
 
-As três imagens foram exibidas na conversa, mas a plataforma não disponibilizou arquivos baixáveis/paths para elas no executor. Apenas os textos colados estão em attachments. Não foi feita reconstrução dos pixels, geração por IA ou cópia de binário/Base64 da conversa.
+As páginas oficiais, os três JPEGs e https://www.pexels.com/license/ foram acessados com HTTP 200 após a ativação da rede. Os metadados ImageObject de cada página confirmaram o autor, a URL do arquivo, a licença e as dimensões. Os arquivos locais correspondem aos contentUrl oficiais; SHA-256 e dimensões originais constam em `licenses/pexels-gallery-sources.json`.
 
-O proprietário informou as seguintes fontes, sem se declarar autor nem titular de autorizações individuais:
+**Divergência resolvida:** as fotos oficiais dos links são diferentes dos anexos inline da conversa. A diferença foi informada antes de incorporá-las, e o proprietário autorizou expressamente usar as fotos oficiais dos links. Os anexos não foram reconstruídos nem atribuídos falsamente ao Pexels.
 
-| Uso | Autor informado | Página informada | Situação |
+| Arquivo local | Autor confirmado | Fonte oficial | Licença |
 | --- | --- | --- | --- |
-| Corte masculino | Alex Urezkov | https://www.pexels.com/photo/a-man-having-a-haircut-in-a-barber-shop-9992818/ | Arquivo/correspondência e licença pendentes de verificação |
-| Barba e acabamento | Pavel Danilyuk | https://www.pexels.com/photo/a-man-getting-a-haircut-in-a-barbershop-7518742/ | Arquivo/correspondência e licença pendentes de verificação |
-| Ambiente | Jonathan Cooper | https://www.pexels.com/photo/view-of-a-barbershop-interior-12685938/ | Arquivo/correspondência e licença pendentes de verificação |
+| `assets/gallery/corte-pexels-9992818.jpg` | Alex Urezkov | https://www.pexels.com/photo/a-man-having-a-haircut-in-a-barber-shop-9992818/ | Pexels License |
+| `assets/gallery/barba-pexels-7518742.jpg` | Pavel Danilyuk | https://www.pexels.com/photo/a-man-getting-a-haircut-in-a-barbershop-7518742/ | Pexels License |
+| `assets/gallery/ambiente-pexels-12685938.jpg` | Jonathan Cooper | https://www.pexels.com/photo/view-of-a-barbershop-interior-12685938/ | Pexels License |
 
-O proprietário declarou que a licença Pexels permite uso comercial, sujeita às condições do serviço. A licença oficial a verificar é https://www.pexels.com/license/. A consulta à página, à primeira fonte e ao CDN images.pexels.com foi recusada pelo proxy com HTTP 403 antes da conexão HTTPS. Portanto **não foi confirmada independentemente** a correspondência dos anexos com essas páginas nem a versão atual da licença. Nenhuma dessas fotos foi adicionada a assets/config/build.
+O original `assets/barbearia.jpg`, criado na V1, não é Pexels e continua com sua procedência anterior. Hero e original foram preservados. A galeria totaliza quatro imagens diferentes: esse original e as três fotos licenciadas acima.
 
-O uso solicitado é apenas de banco de imagens para ilustrar serviços/ambiente do modelo, sem apresentar pessoas, autores ou locais como clientes, funcionários, depoentes ou instalações reais da Barbearia Exemplo. Essa restrição deve ser mantida mesmo após verificação da licença. Nenhuma autorização individual de imagem foi presumida.
+## Condições verificadas
 
-## Como desbloquear
+A página oficial permite baixar e usar fotos gratuitamente, modificá-las e utilizá-las em sites, materiais promocionais e templates vendidos. Atribuição não é obrigatória, mas os créditos foram registrados. O texto consultado está em `licenses/PEXELS-LICENSE.txt`, também distribuído no build junto ao registro das fontes.
 
-Foram salvos no rascunho de configuração do ambiente somente os domínios `www.pexels.com` e `images.pexels.com`, preservando os acessos existentes. A ferramenta exige revisar/salvar e publicar a configuração do ambiente para ativá-los; salvar o rascunho não aplica a rede. Isso não publica o site no Cloudflare.
+Restrições relevantes: não retratar pessoas identificáveis de modo ofensivo; não sugerir endosso de pessoas/marcas; não vender cópias inalteradas como produto fotográfico; não redistribuir como banco de imagens/wallpapers; não usar as fotos como marca/logotipo/nome comercial. A licença não foi interpretada como cessão de direitos pessoais ou autorização individual além de suas condições.
 
-Com acesso ativo, baixar os originais diretamente nas fontes e compará-los às imagens da conversa pode dispensar reenvio. Se o acesso não puder ser liberado, enviar cada foto em um ZIP separado permite que o arquivo chegue como anexo baixável, acompanhado da documentação da licença/fonte para verificação. Não é necessário reenviar tudo em uma única mensagem.
+Neste modelo, as fotos apenas ilustram serviços e um ambiente. As pessoas, autores e locais não são apresentados como clientes, profissionais, depoentes ou instalações reais da Barbearia Exemplo. Nenhuma foto foi usada no logotipo, favicon, hero ou testemunho. Não existe venda avulsa de fotografia. Para entregar um site de estabelecimento real, substituir por fotografias próprias/autorizadas e atualizar os créditos conforme o caso.
 
-## Critério de conclusão
+## Otimização e substituição futura
 
-Não cadastrar caminhos de arquivos inexistentes nem declarar a galeria concluída. O hero/original e a imagem única já presente devem ser preservados. A galeria só ficará com quatro imagens quando as três novas estiverem acessíveis, verificadas e incluídas localmente, com derivados WebP/AVIF, alt, dimensões e teste de build/carregamento. Depois disso, atualizar este registro com os nomes reais dos arquivos e licenças confirmadas.
+Os JPEGs originais foram mantidos. O build gera WebP/AVIF em larguras até 1600px, sem ampliar fontes menores, com srcset/sizes, dimensões reais, lazy loading e decodificação assíncrona. Nenhuma URL externa é usada para carregar fotos durante a navegação. O primeiro quadro preserva a imagem panorâmica existente, seguido de três retratos em colunas no desktop e uma coluna no celular.
+
+Para substituir fotos de futuros clientes, editar somente `images.gallery` em config.js e os arquivos autorizados em assets; registrar autoria/licença e rodar o build. Não repetir fotos/recortes para simular variedade. Os pesos de cada variante estão em dist/image-report.json.

@@ -29,7 +29,10 @@ module.exports = {
   images: {
     hero: { src: 'assets/barbearia.jpg', alt: 'Composição de interior com cadeira de couro e iluminação acolhedora' },
     gallery: [
-      { src: 'assets/barbearia.jpg', alt: 'Composição de interior com cadeira de barbeiro em couro e luz quente', caption: '01 — AQUI, O TEMPO É SEU' }
+      { src: 'assets/barbearia.jpg', alt: 'Composição de interior com cadeira de barbeiro em couro e luz quente', caption: '01 — AQUI, O TEMPO É SEU' },
+      { src: 'assets/gallery/corte-pexels-9992818.jpg', alt: 'Profissional aparando o cabelo de um homem visto de costas, com capa clara', caption: '02 — PRECISÃO NO CORTE' },
+      { src: 'assets/gallery/barba-pexels-7518742.jpg', alt: 'Atendimento de barba com cliente reclinado em salão com parede de tijolos', caption: '03 — CUIDADO NO ACABAMENTO' },
+      { src: 'assets/gallery/ambiente-pexels-12685938.jpg', alt: 'Cadeira de barbeiro preta diante de espelho em ambiente claro', caption: '04 — DETALHES QUE ACOLHEM' }
     ] // Até quatro fotos distintas e autorizadas. Não repita arquivos para simular variedade.
   },
   reviews: {

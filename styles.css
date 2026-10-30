@@ -1257,3 +1257,12 @@ html:not(.js) .whatsapp-float { position: static; margin: 20px; }
   .booking { padding-block: 48px; }
   .booking-action { max-width: none; }
 }
+/* Galeria V1.2.3: original panorâmico e três fotografias distintas em retrato. */
+.gallery-grid[data-count="4"] { grid-template-columns: repeat(3,minmax(0,1fr)); gap: 22px; }
+.gallery-grid[data-count="4"] .gallery-main { grid-column: 1 / -1; }
+.gallery-grid[data-count="4"] .gallery-main img { height: 380px; }
+.gallery-grid[data-count="4"] figure:not(.gallery-main) img { height: auto; aspect-ratio: 3 / 4; object-fit: cover; }
+@media (max-width: 600px) {
+  .gallery-grid[data-count="4"] { grid-template-columns: minmax(0,1fr); gap: 18px; }
+  .gallery-grid[data-count="4"] .gallery-main img { height: 265px; }
+}

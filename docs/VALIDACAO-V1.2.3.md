@@ -1,44 +1,49 @@
-# V1.2.3 — auditoria concluída; galeria pendente
+# V1.2.3 — galeria completa e auditoria final
 
-Branch `feat/barbearia-exemplo-v1-2`, sobre V1.2.2 (`eb80f0b`). Nenhuma reconstrução, merge ou deploy direto em produção. Esta etapa **não atende ainda ao critério final de quatro fotos verificadas**.
+Branch `feat/barbearia-exemplo-v1-2`, continuando `c3de979`, sem reconstrução do site, merge ou deploy direto em produção.
 
-## Implementado
+## Galeria e autorização
 
-- Sharp 0.34.5 → 0.35.5; Lighthouse 12.8.2 → 13.6.0, com justificativa e avisos em [SEGURANCA-V1.2.3.md](SEGURANCA-V1.2.3.md).
-- Node mínimo 22.19 para a ferramenta de auditoria corrigida, sem mudar a linha 22 configurada no ambiente.
-- Cache de imagens e OG com assinatura Sharp/libvips, obrigando regeneração quando o motor muda.
-- Teste de teclado aguarda a navegação da âncora antes de conferir a URL, evitando uma corrida de eventos; a verificação funcional foi preservada.
-- Fontes Pexels fornecidas pelo proprietário registradas sem inventar licença confirmada ou arquivo físico ausente.
-- Guia Windows atualizado com o sucesso manual informado pelo proprietário; nenhum teste com número pessoal repetido.
+As páginas oficiais, a licença e os três JPEGs do Pexels retornaram HTTP 200. Os metadados confirmaram autoria, URL e dimensões; os hashes dos arquivos baixados e incluídos no build foram conferidos. Foi informada a divergência em relação aos anexos inline e o proprietário autorizou expressamente usar as fotos oficiais dos links.
 
-## Preservado
+A galeria tem quatro imagens únicas: original preservado e três novas fotos de Alex Urezkov (9992818), Pavel Danilyuk (7518742) e Jonathan Cooper (12685938), sob Pexels License verificada. Nenhuma imagem foi gerada por IA nesta etapa. Hero/original, favicon, logotipo e mensagens aprovadas continuam intactos.
 
-Hero/original, galeria atual, CSS, JS público, favicon B, logotipo do cabeçalho, preços, botões e faixa de valores. Mensagens genéricas/por serviço e contato público comparados ao commit anterior: idênticos, sem imprimir valores. Modo privado, Git ignore e configuração do Cloudflare sem mudanças funcionais.
+Fontes, condições e arquivos: [FONTES-FOTOGRAFIAS-V1.2.3.md](FONTES-FOTOGRAFIAS-V1.2.3.md). Licença e registro de autores/hashes em licenses, incluídos no build. As pessoas/locais não são apresentados como clientes, funcionários ou instalações reais da marca.
 
-Nenhum arquivo pessoal foi lido, solicitado ou incluído no commit. A configuração privada continua ignorada, excluída da produção e coberta por comparação dos bytes da saída.
+A composição usa o original panorâmico, seguido de três retratos em colunas no desktop e uma coluna no celular. Todos carregam localmente, com dimensões, alt, lazy loading, WebP/AVIF e srcset/sizes. Derivados novos limitados a 1600px, sem ampliar arquivos menores. Os JPEGs originais permanecem como fallback.
 
-## Resultados reais
+| Fonte | Original | Maior WebP | Maior AVIF | Largura do derivado |
+| --- | ---: | ---: | ---: | ---: |
+| Original da V1 | 266.302 bytes | 123.650 | 64.228 | 1536px |
+| Corte — Alex Urezkov | 2.684.059 bytes | 287.472 | 110.899 | 1600px |
+| Barba — Pavel Danilyuk | 1.795.534 bytes | 334.728 | 138.493 | 1600px |
+| Ambiente — Jonathan Cooper | 3.754.022 bytes | 181.000 | 91.058 | 1600px |
 
-- Instalação em cópia limpa com `npm ci --include=dev`, seguida de `npm run build`: status 0; dist/index.html, imagens, CSS/JS, SEO, manifest, ícones e recursos conferidos pelo verificador.
-- `npm test` na cópia limpa: status 0. 36 cenários públicos + seis privados, nas larguras 375/390/768/1280/1440/1920px, além das validações unitárias.
-- Público: teclado/foco/menu, links, alinhamento, três valores, WhatsApp com/sem número, avaliações manuais 4,0/4,5 e ausentes, demo, configuração mínima, SEO e carregamento aprovados. Sem erros JS, 404, overflow ou violações axe/contraste nos cenários executados.
-- Privado: links/mensagens, nova aba sem opener, flutuante móvel, comparação byte a byte de dist com/sem configuração pessoal sintética, ausência do contato em artefatos/logs, ignore, override bloqueado, loopback e Host/Origin/cross-site aprovados. Nenhuma mensagem enviada; navegações wa.me interceptadas. Fixtures apagadas.
-- `npm audit`: antes 30 alertas (19 moderados e 11 altos), depois 0. `npm audit --omit=dev`: 0 antes/depois. Auditoria pontual, sem garantia sobre vulnerabilidades futuras.
-- Lighthouse 13.6.0 mobile local, modo demo: Performance 100, Acessibilidade 100, Boas práticas 100, SEO 66. Sem warnings. SEO reduzido intencionalmente pelo noindex. Não é PageSpeed de produção nem validação da galeria ainda incompleta.
-- Capturas das seis larguras inspecionadas em arquivos compactos. O layout foi mantido; a galeria atual carrega, mas a galeria de quatro fotos **não foi validada** porque os novos arquivos não foram incorporados.
-- Original JPEG preservado: 266.302 bytes. Derivados na largura 1536: WebP 123.650, AVIF 64.228 bytes com o motor atualizado.
-- Sintaxe e git diff --check aprovados. Mensagens/contato público e arquivos visuais originais comparados ao commit anterior.
+Originais Pexels têm larguras 4000, 2681 e 4480px respectivamente; a comparação de pesos inclui redução de dimensões. A transferência real depende do viewport/DPR/formato escolhido pelo navegador. Todas as variantes estão em dist/image-report.json.
 
-## Bloqueios reais da galeria
+## Verificações executadas
 
-As fotos apareceram inline na conversa, mas não foram localizadas como arquivos baixáveis no executor. As páginas e o CDN do Pexels retornaram HTTP 403 no proxy, impedindo baixar originais, conferir correspondência e ler a licença oficial. Não foram geradas fotos com IA, reconstruídos pixels ou criados arquivos fictícios.
+- `npm ci --include=dev && npm run build` em cópia limpa: status 0. dist/index.html, quatro imagens locais e licenças presentes; verificador aprovou CSS/JS, imagens/srcset, SEO, manifest e ícones.
+- `npm test`: status 0. 36 cenários públicos + seis privados, em 375/390/768/1280/1440/1920px, além de validações unitárias.
+- Galeria: exatamente quatro src distintos e os arquivos configurados; todas as imagens renderizadas carregaram, com dimensões/alt e lazy loading. Nenhuma URL externa de fotografia na navegação.
+- Menu/teclado/foco, links, alinhamento, valores, WhatsApp com/sem número, mensagens por serviço, avaliações manuais/ausentes, demo/mínimo e SEO aprovados. Sem JS errors, 404, overflow ou violações axe/contraste nos cenários executados.
+- Galeria inspecionada visualmente nas seis larguras usando capturas compactas; não foram impressos bytes nem imagens Base64 em texto.
+- Modo privado: navegação interceptada, nova aba sem opener, saída idêntica com/sem configuração sintética, ausência do contato em artefatos/logs, ignore e controles HTTP aprovados. Nenhum número pessoal solicitado/lido ou teste pessoal repetido. O sucesso Windows continua sendo o informado pelo proprietário.
+- Fonte e build: três hashes SHA-256 conferidos e originais idênticos aos arquivos copiados em dist; licença presente na saída. Imagem original/hero e fallback SVG comparados ao commit de referência.
+- `npm audit`: zero alertas na consulta final; as correções 30→0 do commit anterior foram preservadas. Detalhes em [SEGURANCA-V1.2.3.md](SEGURANCA-V1.2.3.md).
+- Lighthouse 13.6.0 mobile local **com a galeria completa**: Performance 100, Acessibilidade 100, Boas práticas 100, SEO 66, sem warnings. SEO reduzido pelo noindex intencional; não é medição da URL pública de produção.
+- Sintaxe e git diff --check aprovados. Contato público e mensagens genérica/por serviço/indisponibilidade comparados ao c3de979: iguais, sem exibir valores.
 
-Fontes/autores informados, restrições e próximos passos: [FONTES-FOTOGRAFIAS-V1.2.3.md](FONTES-FOTOGRAFIAS-V1.2.3.md). A rede necessária foi salva no rascunho do ambiente, mas não ativada automaticamente. Faltam as três fotos verificadas para completar quatro; não aprovar como galeria concluída antes dessa etapa.
+## Preservação e limites
 
-## Arquivos
+O modo demo/noindex continua ativo. Domínio oficial/contato comercial real não foram inventados. Para um cliente real, preencher dados aprovados, usar fotografias próprias/autorizadas e conferir as condições da licença, domínio/SEO/indexação e privacidade antes de publicar.
 
-Modificados: README.md, config.js (somente versão no comentário), package.json, package-lock.json, scripts/build.cjs, tests/smoke.cjs, docs/DEPLOY-CLOUDFLARE.md, docs/TESTE-PRIVADO-WINDOWS.md e docs/PULL_REQUEST_V1.2.md.
+Nenhuma alteração de configuração remota do Cloudflare, implantação manual em produção ou merge. A aprovação final e a publicação continuam sob controle do proprietário. Nenhum número privado incluído no código, relatório ou build.
 
-Criados: docs/SEGURANCA-V1.2.3.md, docs/FONTES-FOTOGRAFIAS-V1.2.3.md e docs/VALIDACAO-V1.2.3.md.
+## Arquivos desta continuação
 
-Nenhuma fotografia adicionada/removida, nenhuma mensagem aprovada modificada e nenhum arquivo privado versionado. Não há mudanças de layout ou configuração remota do Cloudflare. Arquivos de publicação seguem gerados em dist e ignorados pelo Git.
+Modificados: config.js, scripts/build.cjs, styles.css, tests/smoke.cjs, README.md, docs/FONTES-FOTOGRAFIAS-V1.2.3.md, docs/SEGURANCA-V1.2.3.md, docs/VALIDACAO-V1.2.3.md e docs/PULL_REQUEST_V1.2.md.
+
+Criados: assets/gallery/corte-pexels-9992818.jpg, assets/gallery/barba-pexels-7518742.jpg, assets/gallery/ambiente-pexels-12685938.jpg, licenses/PEXELS-LICENSE.txt e licenses/pexels-gallery-sources.json.
+
+Nenhum arquivo anterior removido. Código do WhatsApp privado, Git ignore, HTML-base, ícones originais, dependências corrigidas e configuração do Pages preservados. Derivados e artefatos de publicação são gerados em dist, ignorado pelo Git.
