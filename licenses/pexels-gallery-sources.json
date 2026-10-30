@@ -1,0 +1,47 @@
+{
+  "license": "Pexels License",
+  "licenseUrl": "https://www.pexels.com/license/",
+  "authorization": "Uso das fotos oficiais dos links autorizado pelo proprietário após confirmação de que diferem dos anexos.",
+  "usage": "Banco de imagens para serviços/ambiente do modelo; sem endosso, clientes ou instalações reais atribuídos.",
+  "photos": [
+    {
+      "id": "7518742",
+      "author": "Pavel Danilyuk",
+      "page": "https://www.pexels.com/photo/a-man-getting-a-haircut-in-a-barbershop-7518742/",
+      "contentUrl": "https://images.pexels.com/photos/7518742/pexels-photo-7518742.jpeg",
+      "license": "https://www.pexels.com/license/",
+      "width": 2681,
+      "height": 4016,
+      "bytes": 1795534,
+      "sha256": "366a579aefef77dcf8b6eeee4e4502030bc69241dfcda830245e0a211a14760a",
+      "status": "origem, autoria e licença verificadas; uso das fotos oficiais autorizado pelo proprietário",
+      "file": "assets/gallery/barba-pexels-7518742.jpg"
+    },
+    {
+      "id": "9992818",
+      "author": "Alex Urezkov",
+      "page": "https://www.pexels.com/photo/a-man-having-a-haircut-in-a-barber-shop-9992818/",
+      "contentUrl": "https://images.pexels.com/photos/9992818/pexels-photo-9992818.jpeg",
+      "license": "https://www.pexels.com/license/",
+      "width": 4000,
+      "height": 6000,
+      "bytes": 2684059,
+      "sha256": "d05a9b4738d719d3b37d17d3412d44e3ef18f2ecfe8d89fbcc7e283f3d70ac91",
+      "status": "origem, autoria e licença verificadas; uso das fotos oficiais autorizado pelo proprietário",
+      "file": "assets/gallery/corte-pexels-9992818.jpg"
+    },
+    {
+      "id": "12685938",
+      "author": "Jonathan Cooper",
+      "page": "https://www.pexels.com/photo/view-of-a-barbershop-interior-12685938/",
+      "contentUrl": "https://images.pexels.com/photos/12685938/pexels-photo-12685938.jpeg",
+      "license": "https://www.pexels.com/license/",
+      "width": 4480,
+      "height": 6720,
+      "bytes": 3754022,
+      "sha256": "5cfbb97c8218ebbeec712124b5fc6ef7a4eae4171e6f11e8eb93c09f9e15e2de",
+      "status": "origem, autoria e licença verificadas; uso das fotos oficiais autorizado pelo proprietário",
+      "file": "assets/gallery/ambiente-pexels-12685938.jpg"
+    }
+  ]
+}

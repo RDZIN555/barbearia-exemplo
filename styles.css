@@ -63,14 +63,6 @@ a:focus-visible,button:focus-visible {
   top:12px;
 }
 
-.demo-banner {
-  text-align:center;
-  background:#24271f;
-  color:#c9cbbb;
-  font-size:9px;
-  letter-spacing:2px;
-  padding:7px 15px;
-}
 
 .header {
   height:100px;
@@ -462,11 +454,6 @@ figcaption {
   letter-spacing:1.6px;
 }
 
-.image-disclosure {
-  font-size:10px;
-  color:#b4b6a8;
-  margin:14px 0 0;
-}
 
 .about {
   display:grid;
@@ -604,9 +591,6 @@ figcaption {
   margin-bottom:7px;
 }
 
-.small-note {
-  font-size:10px!important;
-}
 
 .hours {
   padding-top:6px;
@@ -860,11 +844,6 @@ footer>a:last-of-type {
   html {
     scroll-padding-top:25px;
   }
-  .demo-banner {
-    font-size:7px;
-    letter-spacing:1px;
-    padding:7px 20px;
-  }
   .header {
     height:78px;
     padding-inline:6%;
@@ -891,11 +870,11 @@ footer>a:last-of-type {
     display:none;
   }
   .hero {
-    min-height:665px;
+    min-height:590px;
     align-items:flex-start;
   }
   .hero-content {
-    margin:65px 6% 90px;
+    margin:46px 6% 65px;
     max-width:88%;
   }
   .hero-image {
@@ -1006,9 +985,6 @@ footer>a:last-of-type {
   }
   .gallery-detail img {
     height:230px;
-  }
-  .image-disclosure {
-    font-size:9px;
   }
   .about {
     display:flex;
@@ -1122,3 +1098,173 @@ footer>a:last-of-type {
   transform:rotate(-45deg);
 }
 
+/* V1.1 — refinamentos sobre a identidade existente. */
+[hidden] { display: none !important; }
+.header-cta { min-height: 44px; display: inline-flex; align-items: center; justify-content: center; }
+.service-price strong { font-size: 32px; }
+.service-price > span { font-size: 10px; }
+.brand { min-width: 0; }
+.brand > span:last-child { overflow-wrap: anywhere; max-width: 220px; }
+.social-links { padding: 24px 8%; border-top: 1px solid var(--line); display: flex; gap: 25px; flex-wrap: wrap; color: var(--gold); }
+.social-links a { overflow-wrap: anywhere; }
+.gallery-grid[data-count="3"], .gallery-grid[data-count="4"] { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.gallery-grid[data-count="3"] .gallery-main { grid-column: 1 / -1; }
+.review-summary { min-width: 220px; }
+.review-summary > strong { display: block; font: 42px var(--serif); color: var(--gold); }
+.review-stars { display: block; width: 150px; height: 30px; margin-block: 12px; }
+.review-summary p { font-size: 13px; color: var(--muted); margin-bottom: 15px; }
+.review-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 20px; }
+.review-grid figure { padding: 28px; border: 1px solid var(--line); background: var(--panel); overflow-wrap: anywhere; }
+.review-grid blockquote { margin: 0 0 20px; font: 21px/1.6 var(--serif); }
+.review-grid figcaption { position: static; padding: 0; background: none; color: var(--gold); letter-spacing: 1px; }
+.reviews { border-top: 1px solid var(--line); }
+.hours dl, .service-card, .contact > div, .review-summary { min-width: 0; overflow-wrap: anywhere; }
+.location-card #map-link { align-self: flex-start; margin-top: 10px; }
+@media (max-width: 900px) {
+  .review-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .header-cta { margin-right: 18px; }
+}
+@media (max-width: 600px) {
+  .header { height: 76px; gap: 10px; }
+  .header .brand { flex: 1; gap: 7px; }
+  .header .brand > span:last-child { max-width: 140px; }
+  .header .brand-mark { padding-right: 12px; }
+  .header-cta { flex: 0 0 125px; margin: 0; padding: 10px 7px; font-size: 9px; letter-spacing: .5px; line-height: 1.4; text-align: center; }
+  .menu-toggle { flex: 0 0 38px; min-height: 44px; }
+  .hero { min-height: 590px; }
+  .hero-content { margin: 46px 6% 65px; }
+  .hero-actions { margin-top: 23px; gap: 17px; }
+  .hero-note { margin-top: 25px; }
+  .service-price strong { font-size: 32px; }
+  .gallery-grid[data-count] { grid-template-columns: minmax(0, 1fr); }
+  .gallery-grid[data-count="3"] .gallery-main { grid-column: auto; }
+  .gallery-grid figure img { height: 265px; }
+  .review-grid { grid-template-columns: minmax(0, 1fr); }
+  .review-summary { margin-top: 25px; }
+  .social-links { padding-inline: 6%; }
+}
+/* V1.2 — imagens responsivas, contato por serviço e recursos opcionais. */
+.hero-image { display: block; background: none; }
+.hero-image > img { width: 100%; height: 100%; object-fit: cover; object-position: center 55%; }
+.hero-image::after { content: ''; position: absolute; inset: 0; background: linear-gradient(90deg,rgba(16,19,15,.97),rgba(16,19,15,.80) 35%,rgba(16,19,15,.12) 74%); }
+picture { display: block; }
+.gallery picture { width: 100%; height: 100%; }
+.service-card { display: flex; flex-direction: column; }
+.service-price { margin-top: auto; }
+.service-cta { margin-top: 20px; min-height: 44px; display: inline-flex; align-items: center; justify-content: space-between; color: var(--gold); }
+.service-cta::after { content: '→'; margin-left: 8px; }
+.service-grid[data-count="1"] { grid-template-columns: minmax(0, 1fr); }
+.service-grid[data-count="2"] { grid-template-columns: repeat(2, minmax(0,1fr)); }
+.contact[data-columns="1"] { grid-template-columns: minmax(0,1fr); }
+.contact[data-columns="2"] { grid-template-columns: repeat(2,minmax(0,1fr)); }
+.map-frame { grid-column: 1 / -1; }
+.map-frame iframe { display: block; width: 100%; border: 0; height: 320px; }
+.commercial-demo { margin: 0 8% 48px; padding: 30px; border: 1px solid var(--line); display: flex; align-items: center; justify-content: space-between; gap: 25px; }
+.commercial-demo h2 { font-size: 28px; letter-spacing: -.5px; }
+.commercial-demo p { font-size: 13px; color: var(--muted); margin: 10px 0 0; }
+.commercial-demo .button { flex-shrink: 0; }
+.whatsapp-float { position: fixed; z-index: 20; right: 20px; bottom: calc(20px + env(safe-area-inset-bottom,0px)); width: 54px; height: 54px; border-radius: 50%; border: 1px solid var(--gold); background: var(--bg); color: var(--gold); display: flex; align-items: center; justify-content: center; box-shadow: 0 5px 22px #0006; }
+.whatsapp-float svg { width: 29px; height: 29px; }
+a,button { scroll-margin-bottom: 100px; }
+.text-link { min-height: 24px; display: inline-block; }
+.review-platform { color: var(--gold); font-size: 12px; }
+@media (min-width: 901px) { .whatsapp-float[data-desktop="false"] { display: none; } }
+@media (max-width: 900px) {
+  .hero-image::after { background: linear-gradient(90deg,rgba(16,19,15,.95),rgba(16,19,15,.67) 60%,rgba(16,19,15,.3)); }
+  html:not(.js) .header { height: auto; min-height: 85px; flex-wrap: wrap; padding-block: 16px; }
+  html:not(.js) .header nav { display: flex; position: static; order: 4; width: 100%; border: 0; padding: 12px 0 0; }
+  html:not(.js) .menu-toggle { display: none; }
+}
+@media (max-width: 600px) {
+  .hero-image > img { object-position: 65% center; }
+  .hero-image::after { background: linear-gradient(90deg,rgba(16,19,15,.93),rgba(16,19,15,.72)); }
+  .service-grid[data-count], .contact[data-columns] { grid-template-columns: minmax(0,1fr); }
+  .commercial-demo { margin: 0 6% 35px; padding: 25px; flex-direction: column; align-items: stretch; }
+  .commercial-demo .button { justify-content: center; }
+  .commercial-demo h2 { font-size: 27px; }
+  .has-floating-whatsapp { padding-bottom: calc(85px + env(safe-area-inset-bottom,0px)); }
+  .skip-link:focus { max-width: calc(100vw - 40px); }
+}
+html:not(.js) .whatsapp-float { position: static; margin: 20px; }
+@media (max-width: 600px) { .menu-toggle { flex-basis: 44px; width: 44px; } }
+
+.whatsapp-float.is-covered { visibility: hidden; pointer-events: none; }
+/* V1.2.1 — WhatsApp reconhecível, contraste AA e galeria sem recortes repetidos. */
+.button.whatsapp-action, .whatsapp-float {
+  background: #25d366;
+  color: #102b1a;
+  border: 1px solid #102b1a;
+  cursor: pointer;
+  font-family: inherit;
+  text-decoration: none;
+  transition: background .18s, transform .18s, box-shadow .18s;
+}
+.button.whatsapp-action { gap: 12px; justify-content: center; min-height: 48px; }
+.whatsapp-action > svg { width: 23px; height: 23px; flex: 0 0 auto; }
+.button.whatsapp-action:hover:not(:disabled), .whatsapp-float:hover { background: #38e47a; box-shadow: 0 4px 15px #0002; }
+.button.whatsapp-action:active, .whatsapp-float:active { background: #1fbd59; transform: scale(.98); }
+.whatsapp-action:focus-visible { outline: 3px solid var(--gold); outline-offset: 4px; }
+.service-cta { width: 100%; padding: 12px; font-size: 11px; line-height: 1.5; }
+.service-cta::after { content: none; }
+.whatsapp-float > svg { width: 29px; height: 29px; }
+.whatsapp-notice { position: fixed; z-index: 30; right: 20px; bottom: calc(88px + env(safe-area-inset-bottom,0px)); max-width: min(360px,calc(100vw - 40px)); padding: 16px 10px 16px 20px; display: flex; align-items: center; gap: 8px; background: var(--panel); color: var(--white); border: 1px solid var(--gold); box-shadow: 0 8px 30px #0005; }
+.whatsapp-notice p { margin: 0; font-size: 13px; overflow-wrap: anywhere; }
+.notice-close { background: transparent; color: var(--white); border: 0; cursor: pointer; flex: 0 0 44px; width: 44px; height: 44px; display: inline-flex; align-items: center; justify-content: center; }
+.notice-close:hover { color: var(--gold); }
+.notice-close svg { width: 20px; height: 20px; }
+.gallery-grid[data-count="1"] { grid-template-columns: minmax(0,1fr); }
+@media (prefers-reduced-motion: reduce) {
+  .button.whatsapp-action:hover, .button.whatsapp-action:active, .whatsapp-float:active { transform: none; }
+}
+@media (min-width: 601px) and (max-width: 900px) {
+  .booking .button.whatsapp-action { min-width: 250px; }
+}
+/* V1.2.2 — mesma identidade, contêineres alinhados e contato preto/dourado. */
+.button.whatsapp-action { background: var(--gold); color: #151714; border-color: var(--gold); }
+.button.whatsapp-action:hover:not(:disabled) { background: #dfc38e; color: #151714; }
+.button.whatsapp-action:active { background: #b49662; color: #151714; }
+.booking .button.whatsapp-action { background: #151714; color: #f4f0e7; border-color: #151714; }
+.booking .button.whatsapp-action:hover:not(:disabled) { background: #252a22; color: #e6c88f; }
+.booking .button.whatsapp-action:active { background: #0e100c; color: #f4f0e7; }
+.booking p:not(.eyebrow) { color: #20291c; font-size: 15px; line-height: 1.8; }
+.booking .eyebrow { color: #263021; font-size: 11px; }
+.booking .booking-action p { color: #263021; font-size: 12px !important; line-height: 1.75; }
+.booking-action { max-width: 320px; }
+.values-strip > span { text-align: center; }
+@media (min-width: 901px) {
+  :root { --content-inset: max(min(5vw,72px),calc((100vw - 1440px)/2)); }
+  .header, .section, .booking, footer, .social-links { padding-inline: var(--content-inset); }
+  .hero-content { margin-left: var(--content-inset); margin-top: 64px; margin-bottom: 72px; }
+  .section-heading > p { max-width: 36ch; }
+  .service-card { padding: clamp(28px,2.5vw,38px); }
+  .service-card p { max-width: 36ch; }
+  .service-price strong { font-size: 36px; }
+  .values-strip { padding-inline: var(--content-inset); justify-content: center; gap: clamp(20px,4vw,70px); font-size: 10px; }
+  .booking { gap: 48px; }
+  .booking > div:first-child { max-width: 620px; }
+  .booking-action { flex-shrink: 0; }
+  .commercial-demo { margin-inline: var(--content-inset); }
+}
+@media (max-width: 900px) {
+  .booking p:not(.eyebrow) { font-size: 14px; }
+  .values-strip { font-size: 9px; letter-spacing: 1px; }
+}
+@media (max-width: 600px) {
+  .hero-content { margin-top: 50px; }
+  .values-strip { display: grid; grid-template-columns: minmax(0,1fr); gap: 8px; padding: 20px 24px; }
+  .values-strip > span, .values-strip > span:last-child { width: auto; font-size: 9px; letter-spacing: 1.5px; }
+  .values-strip i { display: none; }
+  .booking { padding-block: 48px; }
+  .booking-action { max-width: none; }
+}
+/* Galeria V1.2.3: original panorâmico e três fotografias distintas em retrato. */
+.gallery-grid[data-count="4"] { grid-template-columns: repeat(3,minmax(0,1fr)); gap: 22px; }
+.gallery-grid[data-count="4"] .gallery-main { grid-column: 1 / -1; }
+.gallery-grid[data-count="4"] .gallery-main img { height: 380px; }
+.gallery-grid[data-count="4"] figure:not(.gallery-main) img { height: auto; aspect-ratio: 3 / 4; object-fit: cover; }
+/* Harmonização discreta da fotografia de ambiente, sem alterar o arquivo original. */
+.gallery-grid[data-count="4"] figure:nth-child(4) img { filter: brightness(.9) contrast(1.02); }
+@media (max-width: 600px) {
+  .gallery-grid[data-count="4"] { grid-template-columns: minmax(0,1fr); gap: 18px; }
+  .gallery-grid[data-count="4"] .gallery-main img { height: 265px; }
+}
