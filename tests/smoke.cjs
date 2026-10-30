@@ -7,8 +7,8 @@ const fs = require('node:fs');
 const { execFileSync } = require('node:child_process');
 const { createServer } = require('../scripts/serve.cjs');
 const root = path.resolve(__dirname,'..');
-const output = '/tmp/barbearia-v123-tests';
-const screenshots = '/tmp/barbearia-v123-screenshots';
+const output = '/tmp/barbearia-v13-tests';
+const screenshots = '/tmp/barbearia-v13-screenshots';
 fs.mkdirSync(output,{recursive:true}); fs.mkdirSync(screenshots,{recursive:true});
 const base = require('../config.js');
 
@@ -31,6 +31,8 @@ fixtures.full.services = [
   {id:'auditado',name:'Serviço auditado',description:'Descrição comercial cadastrada para este teste.',price:72.50,duration:'35 min'},
   {id:'segundo',name:'Segundo serviço',description:'Outra descrição de teste.',price:91,duration:'50 min'}
 ];
+fixtures.full.brand = {logo:{src:'assets/barbearia.jpg',alt:'Logo local de teste'},colors:{panel:'#20231e'}};
+fixtures.full.neighborhood = 'Bairro de Teste';
 fixtures.full.hours = [{day:'Dia auditado',time:'10h — 16h'}];
 fixtures.full.whatsappMessage = 'Contato geral de teste';
 fixtures.full.serviceMessage = 'Olá, quero consultar {service}.';
@@ -54,6 +56,9 @@ async function safeFloatingPosition(page) {
 (async()=>{
   const browser=await chromium.launch({executablePath:process.env.CHROMIUM_PATH||'/usr/bin/chromium',headless:true,args:['--no-sandbox']});
   try {
+    const unlocated=build('unlocated',{...base,mapa:{link:'https://example.test/route',embed:'https://www.google.com/maps/embed?pb=test'}});
+    const unlocatedHtml=require('cheerio').load(fs.readFileSync(path.join(unlocated,'index.html'),'utf8'));
+    assert.equal(unlocatedHtml('#map-link,iframe').length,0,'mapa e rota não aparecem sem endereço ou localidade');
     for(const [label,config] of Object.entries(fixtures)) {
       const dir=build(label,config);
       const html=fs.readFileSync(path.join(dir,'index.html'),'utf8');
@@ -80,7 +85,7 @@ async function safeFloatingPosition(page) {
       await new Promise(resolve=>server.listen(0,'127.0.0.1',resolve));
       const url=`http://127.0.0.1:${server.address().port}`;
       try {
-        for(const width of [375,390,768,1280,1440,1920]) {
+        for(const width of [375,390,768,1024,1280,1440,1920]) {
           const page=await browser.newPage({viewport:{width,height:900},deviceScaleFactor:1});
           const errors=[];
           page.on('pageerror',error=>errors.push(error.message));
@@ -205,7 +210,7 @@ async function safeFloatingPosition(page) {
           if(width<=900 && ['model','full','demo'].includes(label)) {
             assert.ok(await safeFloatingPosition(page),'atalho deve aparecer em posição segura');
             const box=await page.locator('.whatsapp-float').boundingBox();
-            assert.ok(box.width>=44&&box.height>=44);
+            assert.equal(box.width,54); assert.equal(box.height,54);
             if(!valid) {
               await page.locator('.whatsapp-float').click();
               assert.ok(await page.locator('#whatsapp-notice').isVisible());
@@ -239,7 +244,32 @@ async function safeFloatingPosition(page) {
             assert.match(await page.locator('.review-grid blockquote').innerText(),/<script>/);
             assert.equal(await page.locator('iframe').getAttribute('loading'),'lazy');
           }
-          if(label==='minimal') assert.equal(await page.locator('.hours,.location-card,.gallery,.service-card').count(),0);
+          if(label==='minimal') assert.equal(await page.locator('.hours,.gallery,.service-card').count(),0);
+          const located = Boolean(config.address);
+          assert.equal(await page.locator('.location-card').getAttribute('data-location'),located?'configured':'pending');
+          if(!located) {
+            assert.equal(await page.locator('#map-link,iframe,#business-address').count(),0);
+            assert.ok(await page.locator('.location-pending').isVisible());
+          }
+          if(label==='full') {
+            assert.equal(await page.locator('.brand-logo').count(),2);
+            assert.equal(await page.locator('html').evaluate(node=>getComputedStyle(node).getPropertyValue('--panel').trim()),'#20231e');
+            assert.match(await page.locator('.business-city').innerText(),/Bairro de Teste/);
+          }
+          if(label==='model') {
+            const filters=await page.locator('.gallery-grid img').evaluateAll(nodes=>nodes.map(n=>getComputedStyle(n).filter));
+            assert.deepEqual(filters,['none','none','none','brightness(0.9) contrast(1.02)']);
+          }
+          const heroCta=page.locator('.hero-cta');
+          assert.equal(await heroCta.count(),1);
+          if(valid) {
+            assert.equal(await heroCta.getAttribute('href'),await page.locator('.whatsapp').getAttribute('href'));
+          } else {
+            assert.equal(await heroCta.evaluate(node=>node.tagName),'BUTTON');
+            await heroCta.click();
+            assert.ok(await page.locator('#whatsapp-notice').isVisible());
+            await page.keyboard.press('Escape');
+          }
           if(label==='invalid') assert.equal(await page.locator('[data-price]').innerText(),'Sob consulta');
           for(const image of await page.locator('img').all()) await image.scrollIntoViewIfNeeded();
           await page.waitForFunction(()=>[...document.images].every(image=>image.complete&&image.naturalWidth>0));
