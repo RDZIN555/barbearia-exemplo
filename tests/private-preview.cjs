@@ -57,14 +57,14 @@ function build() { return execFileSync(process.execPath,['scripts/build.cjs'],{c
   const endpoint=html.match(/src="(\/__private\/[^\"]+\.js)"/)[1];
   assert.equal((await fetch(url+endpoint,{headers:{'Sec-Fetch-Site':'cross-site'}})).status,403);
   stage='navegador';browser=await chromium.launch({executablePath:process.env.CHROMIUM_PATH||'/usr/bin/chromium',headless:true,args:['--no-sandbox']});
-  for(const width of [375,390,768,1280,1440,1920]) {
+  for(const width of [375,390,768,1024,1280,1440,1920]) {
     stage=`navegação ${width}px`;const page=await browser.newPage({viewport:{width,height:900}});const errors=[];
     page.on('pageerror',()=>errors.push('Erro JavaScript'));
     await page.context().route('https://wa.me/**',route=>route.fulfill({contentType:'text/html',body:'<title>Contato interceptado localmente</title>'}));
     await page.emulateMedia({reducedMotion:'reduce'});
     await page.goto(url,{waitUntil:'networkidle'});
     assert.equal(await page.locator('[data-whatsapp-unavailable]').count(),0);
-    for(const selector of width<=900?['.whatsapp','.service-cta','.whatsapp-float']:['.whatsapp','.service-cta']) {
+    for(const selector of width<=900?['.hero-cta','.whatsapp','.service-cta','.whatsapp-float']:['.hero-cta','.whatsapp','.service-cta']) {
       if(selector==='.whatsapp-float') {
         let visible=false;
         for(let y=0;y<=1800;y+=120){await page.evaluate(y=>scrollTo(0,y),y);await page.waitForTimeout(40);if(await page.locator(selector).isVisible()){visible=true;break;}}

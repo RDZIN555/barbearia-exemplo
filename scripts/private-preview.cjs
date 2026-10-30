@@ -19,7 +19,7 @@ function createPrivateServer(projectRoot) {
   const endpoint = `/__private/${token}.js`;
   // Resposta criada em memória. Nunca escrita em dist, arquivo JS ou log.
   const client = `(()=>{'use strict';const settings=${JSON.stringify({number,message:config.whatsappMessage,serviceMessage:config.serviceMessage}).replace(/</g,'\\u003c')};
-for(const button of document.querySelectorAll('.whatsapp,.service-cta,.whatsapp-float')){
+for(const button of document.querySelectorAll('.whatsapp,.service-cta,.whatsapp-float,.hero-cta')){
  const link=document.createElement('a');
  for(const attribute of button.attributes) if(!['type','disabled','data-whatsapp-unavailable','aria-controls','aria-expanded','aria-describedby'].includes(attribute.name)) link.setAttribute(attribute.name,attribute.value);
  while(button.firstChild)link.append(button.firstChild);

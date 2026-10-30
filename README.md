@@ -1,6 +1,6 @@
 # Barbearia Exemplo V1.2.3
 
-Modelo comercial estático, em preto e dourado, com personalização em `config.js`. O build gera HTML completo, SEO, imagens responsivas, imagem de compartilhamento e ícones. A produção não precisa de Node, backend, banco de dados, pagamentos ou serviços pagos obrigatórios. Não existe sistema público de avaliações nem agenda automática.
+Modelo comercial estático V1.3 Premium, em preto e dourado, com personalização em `config.js`. O build gera HTML completo, SEO, imagens responsivas, imagem de compartilhamento e ícones. A produção não precisa de Node, backend, banco de dados, pagamentos ou serviços pagos obrigatórios. Não existe sistema público de avaliações nem agenda automática.
 
 A V1.2.3 continua na branch `feat/barbearia-exemplo-v1-2`, preservando V1.1, V1.2 e a correção de build. Nenhuma outra branch, merge ou publicação direta em produção é necessária. O estado de integração deve ser conferido no PR antes de aprovar o merge.
 
@@ -54,7 +54,9 @@ O único campo comercial recomendado como obrigatório é `name`. Uma configura�
 | `name` | Marca, texto institucional, rodapé, SEO, manifest e monograma automático |
 | `slogan` | SEO, imagem social e assinatura padrão; o título editorial do hero está em `content.hero` |
 | `city`, `state`, `country` | Localidade confirmada; título local, contato e JSON-LD; vazios não são inventados |
-| `address` | Endereço textual confirmado, sem geocodificação automática |
+| `address`, `neighborhood` | Endereço e bairro confirmados, sem geocodificação automática |
+| `brand.logo` | Objeto `{ src, alt }` para logotipo local PNG/JPG/WebP/AVIF; vazio preserva o monograma |
+| `brand.colors` | `background`, `panel`, `accent`, `text`, `muted`, `border`: cores hexadecimais de seis dígitos |
 | `siteUrl` | URL HTTPS oficial, com caminho base se necessário; canonical, OG, sitemap e JSON-LD |
 | `description` | Meta description, Open Graph, Twitter e descrição estruturada |
 | `whatsapp` | Somente número comercial público confirmado; nunca use aqui um número pessoal de teste |
@@ -75,7 +77,7 @@ O único campo comercial recomendado como obrigatório é `name`. Uma configura�
 
 `content` organiza `nav`, `headerCta`, `hero`, `values`, `services`, `gallery`, `about`, `booking`, `contact`, `reviews` e `footer`. Os campos preenchidos no arquivo mostram a estrutura completa. Para títulos editoriais, `first` é a linha normal e `accent` a linha dourada; o hero tem ainda `lead` antes do trecho dourado. `description` aceita `\n` para quebra de linha. `about.paragraphs` é uma lista de textos e aceita `{name}`. O conteúdo é escapado como texto; HTML não é executado.
 
-Campos opcionais vazios não exibem conteúdo antigo do template. Campos estruturais, como nome de navegação e títulos, recebem rótulos neutros. O monograma é a primeira letra do nome com estrela dourada; alterar `name` regenera SVG e PNG sem trocar o estilo.
+Campos opcionais vazios não exibem conteúdo antigo do template. Campos estruturais, como nome de navegação e títulos, recebem rótulos neutros. O monograma é a primeira letra do nome com estrela dourada; alterar `name` regenera SVG e PNG sem trocar o estilo. `brand.logo` substitui apenas o logotipo do cabeçalho/rodapé e mantém o favicon existente. As cores principais em `brand.colors` alimentam as variáveis CSS; o verde identificável do WhatsApp flutuante e o contraste da faixa de agendamento são preservados. Mudanças de paleta exigem nova revisão de contraste e teste visual. Fontes são locais do sistema (Georgia/Arial), sem download de serviços externos.
 
 Os preços e horários que acompanham o modelo são exemplos **explicitamente configurados**. Não representam dados comerciais verificados. Troque-os antes da entrega. Não há avaliações, endereços ou telefones pré-preenchidos.
 
@@ -111,9 +113,9 @@ Sem conjunto verificado e sem nota válida ou depoimentos autorizados, a seção
 
 ### Endereço e mapa
 
-`mapa.link` ativa “Como chegar” com URL HTTPS confirmada. `mapa.embed` deve conter a URL de incorporação, não a tag iframe. Fontes aceitas: `https://www.google.com/maps/embed...` e `https://www.openstreetmap.org/export/embed.html...`, sem portas alternativas, credenciais ou host semelhante. Outras origens são rejeitadas. O iframe tem título acessível, carregamento lazy e só existe quando há URL válida. O carregamento envia uma requisição ao provedor do mapa; revise as obrigações de privacidade aplicáveis ao cliente antes de habilitá-lo. Nenhum mapa externo está ativado no modelo.
+`address` confirmado e `mapa.link` HTTPS ativam “Como chegar”. A URL precisa apontar para a rota real escolhida pelo cliente; não há inferência de coordenadas nem geocodificação automática. `mapa.embed` deve conter a URL de incorporação, não a tag iframe. Fontes aceitas: `https://www.google.com/maps/embed...` e `https://www.openstreetmap.org/export/embed.html...`, sem portas alternativas, credenciais ou host semelhante. Outras origens são rejeitadas. O iframe tem título acessível, carregamento lazy e só existe quando há endereço cadastrado e URL válida. O carregamento envia uma requisição ao provedor do mapa; revise as obrigações de privacidade aplicáveis ao cliente antes de habilitá-lo. Nenhum mapa externo está ativado no modelo.
 
-Sem endereço ou mapa, o cartão de localização é omitido; horários e contato mantêm composição adaptada. Horários vazios também não deixam uma coluna reservada.
+Sem endereço, o cartão compacto mostra “Sua barbearia aqui.” com uma composição SVG abstrata original, sem geografia, nomes de ruas ou coordenadas, com texto em `content.contact.pendingTitle` e `pendingDescription`. Não há mapa nem botão de rota, mesmo que uma URL tenha sido preenchida isoladamente. Bairro/cidade/estado confirmados podem ser apresentados enquanto o endereço completo está pendente. Com endereço e sem mapa, aparece apenas a informação cadastrada; horários vazios não reservam coluna. `content.contact.hoursNote` permite personalizar a observação do atendimento. Não use endereços ou coordenadas de terceiros como placeholders.
 
 ### Modo comercial de demonstração
 
@@ -186,7 +188,7 @@ npm run audit:mobile
 
 Playwright utiliza Chromium do ambiente em `/usr/bin/chromium`; configure `CHROMIUM_PATH` para outro caminho. Se necessário em uma máquina nova, instale Chromium pelo gerenciador oficial ou execute `npx playwright install chromium` e informe o caminho. Lighthouse usa o mesmo binário. Testes são somente de desenvolvimento.
 
-A suíte cria builds temporários isolados em `/tmp/barbearia-v123-tests` e testa modelo, cliente completo, demonstração com contato, configuração mínima, configuração inválida e nota 4,0 em **375, 390, 768, 1280, 1440 e 1920px**. Verifica teclado, foco, menu, links internos, normalização e mensagem por serviço do WhatsApp, botão flutuante e rodapé, avaliações fracionárias/ausentes, modo demo, SEO no HTML, robots/sitemap, originais intactos, imagens responsivas, erros JavaScript e 404. O mapa e as navegações externas de WhatsApp dos testes são interceptados localmente: não comprovam disponibilidade de um mapa de cliente nem atendimento do número. Não há envio de mensagens ou avaliações. A personalização completa substitui nome, slogan, textos, serviços, preços, horários, contato, mapa, redes e metadados, verificando ausência dos dados anteriores no HTML.
+A suíte cria builds temporários isolados em `/tmp/barbearia-v123-tests` e testa modelo, cliente completo, demonstração com contato, configuração mínima, configuração inválida e nota 4,0 em **375, 390, 768, 1024, 1280, 1440 e 1920px**. Verifica teclado, foco, menu, links internos, normalização e mensagem por serviço do WhatsApp, botão flutuante e rodapé, avaliações fracionárias/ausentes, modo demo, SEO no HTML, robots/sitemap, originais intactos, imagens responsivas, erros JavaScript e 404. O mapa e as navegações externas de WhatsApp dos testes são interceptados localmente: não comprovam disponibilidade de um mapa de cliente nem atendimento do número. Não há envio de mensagens ou avaliações. A personalização completa substitui nome, slogan, textos, serviços, preços, horários, contato, mapa, redes e metadados, verificando ausência dos dados anteriores no HTML.
 
 São 36 cenários públicos, além de seis cenários privados com dados sintéticos temporários. O teste privado compara todos os bytes da saída, verifica ausência do contato nos artefatos/logs, Git ignore, rejeição de override para dist e isolamento HTTP local. Nenhum número pessoal é necessário para executar a suíte. Axe-core verifica WCAG A/AA básico e contraste nos cenários públicos, inclusive com o aviso aberto. A suíte testa movimento reduzido e conteúdo sem JavaScript. Capturas ficam em `/tmp/barbearia-v123-screenshots`, incluindo avisos abertos. Isso não substitui teste manual com leitor de tela, titularidade do contato ou verificação humana de avaliações e dados comerciais.
 
@@ -207,3 +209,15 @@ Para reproduzir Lighthouse: `node scripts/audit.cjs PASTA LABEL`. Relatórios JS
 - [ ] Cloudflare Pages com comando `npm ci --include=dev && npm run build`, saída `dist`, raiz do repositório e domínio aprovado.
 - [ ] Responsividade, teclado, contraste, foco e movimento reduzido verificados.
 - [ ] Testes locais executados e PageSpeed verificado na URL final após publicação autorizada.
+
+## V1.3 Premium
+
+A jornada coloca serviços e fotos antes de localização/horários e da chamada final. O hero permite consultar diretamente o WhatsApp, com a mesma mensagem geral e o mesmo comportamento seguro quando o contato não está configurado. A prévia privada também inclui esse novo botão; não altere `config.private.json` para fazer o build público. As mensagens dos serviços e o tamanho de 54px do flutuante permanecem preservados.
+
+Veja a [pesquisa visual](docs/REFERENCIAS-V1.3.md) e a [validação e auditoria crítica](docs/VALIDACAO-V1.3.md). Avaliações e Instagram continuam condicionados a dados reais; optou-se por não criar uma seção de equipe vazia nem inventar profissionais. Preços, duração, horários e textos do modelo são configuráveis e devem ser confirmados com o cliente antes da entrega.
+
+### V1.3.1 — cartão de localização
+
+A arte demonstrativa e seu marcador são removidos automaticamente do HTML quando `address` é preenchido. O estado com endereço mantém texto, bairro/cidade, mapa e rota conforme os dados válidos cadastrados. Nenhuma regra de segurança ou configuração privada foi alterada.
+
+Além de `npm test`, execute `npm run test:location` para conferir cinco estados de localização nas larguras 375/390/768/1280/1440px. Os dados de endereço usados são fixtures sintéticas temporárias, com mapas interceptados, sem consulta a estabelecimentos reais. Detalhes em [validação V1.3.1](docs/VALIDACAO-V1.3.1.md).

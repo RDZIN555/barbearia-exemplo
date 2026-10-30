@@ -38,3 +38,9 @@ const {brandIcon}=require('../scripts/brand-icon.cjs');
 assert.ok(!brandIcon('B').includes('<text'),'B vetorial sem fonte externa');
 assert.ok(brandIcon('B').includes('fill-rule="evenodd"'));
 console.log('PASS favicon: monograma B vetorial independente de fontes');
+
+const identity = normalize({brand:{logo:{src:'assets/logo.png',alt:'Marca real'},colors:{accent:'#c8aa75',text:'red;background:url(https://evil.test)',other:'#000000'}}},()=>{});
+assert.deepEqual(identity.brand.colors,{accent:'#c8aa75'});
+assert.equal(identity.brand.logo.src,'assets/logo.png');
+assert.equal(normalize({brand:{logo:{src:'https://evil.test/logo.png',alt:'Insegura'}}},()=>{}).brand.logo,null);
+console.log('PASS identidade: cores hexadecimais permitidas e logotipo local com texto alternativo');

@@ -73,11 +73,17 @@ function normalize(raw = {}, warn = console.warn) {
   }).slice(0, 4);
   const hero = image(raw.images?.hero);
   if (!hero) note('images.hero');
+  const colors = {};
+  for (const [key,value] of Object.entries(raw.brand?.colors || {})) {
+    if (['background','panel','accent','text','muted','border'].includes(key) && /^#[0-9a-f]{6}$/i.test(string(value))) colors[key] = string(value);
+    else note('brand.colors');
+  }
   const mapa = raw.mapa || {};
   const mapEmbed = embed(mapa.embed);
   if (string(mapa.embed) && !mapEmbed) note('mapa.embed');
   return {
-    name, slogan: string(raw.slogan), city: string(raw.city), state: string(raw.state), country: string(raw.country), address: string(raw.address), siteUrl,
+    name, slogan: string(raw.slogan), city: string(raw.city), state: string(raw.state), country: string(raw.country), address: string(raw.address), neighborhood: string(raw.neighborhood), siteUrl,
+    brand: { logo: image(raw.brand?.logo), colors },
     description: string(raw.description).split('{name}').join(name) || `Conheça ${name}${string(raw.city) ? ` em ${string(raw.city)}` : ''}. Consulte os serviços e as informações de atendimento.`,
     whatsapp: number,
     whatsappMessage: string(raw.whatsappMessage) || 'Olá! Gostaria de consultar os horários disponíveis para agendar um atendimento.',

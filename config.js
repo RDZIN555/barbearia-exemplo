@@ -1,11 +1,15 @@
-/* CONFIGURAÇÃO PÚBLICA V1.2.3. Sem senhas ou credenciais.
+/* CONFIGURAÇÃO PÚBLICA V1.3. Sem senhas ou credenciais.
    Os serviços, preços e horários abaixo são exemplos explicitamente configurados.
    Confirme todos os dados e substitua as fotografias antes da entrega comercial.
    Execute npm run build após qualquer alteração. */
 module.exports = {
   name: 'Barbearia Exemplo',
   slogan: 'Seu estilo. Nossa assinatura.',
-  city: '', state: '', country: '', address: '', siteUrl: '',
+  brand: {
+    logo: null, // Opcional: { src: 'assets/logo.png', alt: 'Nome da marca' }.
+    colors: { background: '#151714', panel: '#1d201c', accent: '#c8aa75', text: '#f4f0e7', muted: '#b7b8ad', border: '#393c32' }
+  },
+  city: '', state: '', country: '', address: '', neighborhood: '', siteUrl: '',
   description: 'Corte, barba e cuidado com atenção a cada detalhe. Conheça os serviços da {name} e consulte a disponibilidade de horários.',
   whatsapp: '', // SOMENTE número comercial público confirmado. Para teste pessoal use config.private.json.
   // DDD + número brasileiro, 55 + DDD + número, ou internacional com +.
@@ -46,23 +50,23 @@ module.exports = {
     contatoLabel: 'Vamos conversar', contatoLink: ''
   },
   content: {
-    nav: ['Serviços', 'O espaço', 'Nossa essência', 'Contato'],
+    nav: ['Serviços', 'O espaço', 'Nossa essência', 'Onde estamos'],
     headerCta: 'Agende seu horário',
     hero: {
-      eyebrow: 'O CLÁSSICO ENCONTRA O SEU ESTILO',
-      first: 'Seu estilo.', lead: 'Nossa', accent: 'assinatura.',
-      description: 'Mais que um corte. Um momento seu.\nTécnica, cuidado e personalidade em cada detalhe.',
-      primaryCta: 'Vamos agendar?', secondaryCta: 'Conheça os serviços',
+      eyebrow: 'CORTE MASCULINO · BARBA · CUIDADO',
+      first: 'Bom corte.', lead: '', accent: 'Seu estilo.',
+      description: 'Corte e barba com atenção a cada detalhe.\nEscolha seu serviço. Converse pelo WhatsApp.',
+      primaryCta: 'Agendar pelo WhatsApp', secondaryCta: 'Conheça os serviços',
       note: 'Feito com tempo. Pensado para você.',
       caption: 'O SEU PRÓXIMO CAPÍTULO COMEÇA NA CADEIRA.'
     },
     values: ['RESPEITO AO SEU ESTILO', 'ATENÇÃO AOS DETALHES', 'O PRAZER DE SE CUIDAR'],
-    services: { eyebrow: '01 / SERVIÇOS', first: 'Clássicos bem feitos.', accent: 'Do seu jeito.', description: 'Da primeira conversa ao acabamento final,\ncada detalhe faz parte da experiência.', footnote: 'Seu próximo visual começa com uma boa conversa.', cta: 'Consulte a disponibilidade', serviceCta: 'Agendar este serviço' },
-    gallery: { eyebrow: '02 / O ESPAÇO', first: 'Uma pausa na rotina.', accent: 'Um lugar para você.', description: 'Texturas, luz e conforto.\nUma atmosfera que faz parte do cuidado.' },
-    about: { eyebrow: '03 / NOSSA ESSÊNCIA', first: 'Tradição no gesto.', accent: 'Personalidade no resultado.', paragraphs: ['A {name} nasce de uma ideia simples: cuidar do visual deve ser uma experiência tão boa quanto o resultado.', 'A técnica encontra a escuta. O ambiente convida a desacelerar. E cada corte é pensado para quem ocupa a cadeira.'], signature: 'O bom estilo começa no cuidado.', sealTop: 'ESTILO QUE FICA.', sealBottom: 'CUIDADO QUE MARCA.' },
-    booking: { eyebrow: 'RESERVE UM MOMENTO PARA VOCÊ', first: 'Um novo visual.', accent: 'Uma boa conversa.', description: 'Quer agendar seu horário? Entre em contato pelo WhatsApp para consultar a disponibilidade.', cta: 'Consultar pelo WhatsApp' },
-    contact: { eyebrow: '04 / QUANDO & ONDE', first: 'Te esperamos', accent: 'na cadeira.', description: 'Converse sobre o seu próximo visual.\nConsulte as informações de contato\ne os horários de atendimento.', cta: 'Informações de agendamento', hoursTitle: 'Horário de funcionamento', locationTitle: 'Localização', locationLabel: 'O CUIDADO COMEÇA AQUI' },
+    services: { eyebrow: '01 / SERVIÇOS', first: 'Escolha o cuidado.', accent: 'Encontre seu estilo.', description: 'Serviços, valores e tempo de atendimento.\nTudo claro antes de agendar.', footnote: 'Seu próximo visual começa com uma boa conversa.', cta: 'Consulte a disponibilidade', serviceCta: 'Agendar este serviço' },
+    gallery: { eyebrow: '02 / O ESPAÇO', first: 'O cuidado nos detalhes.', accent: 'O estilo no conjunto.', description: 'Uma seleção de cortes, cuidado e atmosfera.\nInspiração para o seu próximo visual.' },
+    about: { eyebrow: '03 / NOSSA ESSÊNCIA', first: 'Tradição no gesto.', accent: 'Personalidade no resultado.', paragraphs: ['A proposta da {name} é simples: escutar, cuidar e valorizar o seu estilo.', 'Do corte ao acabamento, atenção ao que faz diferença para você.'], signature: 'O bom estilo começa no cuidado.', sealTop: 'ESTILO QUE FICA.', sealBottom: 'CUIDADO QUE MARCA.' },
+    booking: { eyebrow: 'RESERVE UM MOMENTO PARA VOCÊ', first: 'Seu próximo corte.', accent: 'Começa na conversa.', description: 'Quer agendar seu horário? Entre em contato pelo WhatsApp para consultar a disponibilidade.', cta: 'Consultar pelo WhatsApp' },
+    contact: { eyebrow: '04 / VISITE & CONVERSE', first: 'Onde estamos.', accent: 'Quando quiser cuidar de você.', description: 'Localização e horários em um só lugar.', cta: 'Consultar horários pelo WhatsApp', hoursTitle: 'Horário de funcionamento', locationTitle: 'Nosso endereço', locationLabel: 'ESPERAMOS POR VOCÊ', pendingTitle: 'Sua barbearia aqui.', pendingDescription: 'Seu endereço, sua identidade e o caminho até você. Tudo em um só lugar.', hoursNote: 'Atendimento mediante consulta de disponibilidade.' },
     reviews: { eyebrow: 'EXPERIÊNCIAS & CONEXÕES', first: 'Cuidado que marca.', accent: 'Palavras de quem viveu.' },
-    footer: { signature: 'Estilo é pessoal. Cuidado também.', note: 'Cuidado em cada detalhe.' }
+    footer: { signature: 'Estilo é pessoal. Cuidado também.', note: 'Modelo de site para barbearias.' }
   }
 };

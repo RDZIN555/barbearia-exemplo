@@ -1268,3 +1268,157 @@ html:not(.js) .whatsapp-float { position: static; margin: 20px; }
   .gallery-grid[data-count="4"] { grid-template-columns: minmax(0,1fr); gap: 18px; }
   .gallery-grid[data-count="4"] .gallery-main img { height: 265px; }
 }
+
+/* V1.3 Premium — hierarquia editorial sobre a base funcional aprovada. */
+body { -webkit-font-smoothing: antialiased; }
+h1,h2,h3 { text-wrap: balance; }
+p { text-wrap: pretty; }
+.header { height: 88px; }
+.header nav a { min-height: 44px; display: inline-flex; align-items: center; }
+.header-cta { border-color: var(--gold); transition: background .2s, color .2s; }
+.header-cta:hover { background: var(--panel); color: var(--gold); }
+.brand-logo { width: 58px; flex: 0 0 58px; }
+.brand-logo img { display: block; width: 100%; height: 58px; object-fit: contain; }
+.hero { min-height: 620px; }
+.hero-content { max-width: 620px; }
+.hero h1 { font-size: clamp(64px,7vw,100px); line-height: 1.02; letter-spacing: -2.5px; margin-bottom: 27px; }
+.hero-description { font-size: 16px; line-height: 1.8; max-width: 39ch; }
+.hero-actions { gap: 24px; flex-wrap: wrap; }
+.hero-actions .button { padding: 16px 24px; font-size: 13px; }
+.hero-note { margin-top: 28px; }
+.hero-caption { letter-spacing: 2.4px; }
+.section { padding-block: 92px; }
+.section-heading { margin-bottom: 38px; }
+.section-heading h2 { font-size: clamp(36px,3.8vw,54px); letter-spacing: -1.8px; }
+.section-heading > p { font-size: 14px; }
+.eyebrow { letter-spacing: 2px; }
+.values-strip { padding-block: 19px; }
+.service-grid { gap: 0; border: 1px solid var(--line); }
+.service-card { border: 0; border-right: 1px solid var(--line); background: var(--panel); padding: clamp(26px,3vw,44px); }
+.service-card:last-child { border-right: 0; }
+.service-card.featured { background: #23251f; box-shadow: inset 0 2px var(--gold); }
+.service-card:hover { background: #242720; }
+.service-icon { margin-bottom: 26px; }
+.service-card h3 { font-size: 29px; letter-spacing: -.5px; }
+.service-card p { font-size: 14px; line-height: 1.75; min-height: 74px; margin-bottom: 26px; }
+.service-price { padding-top: 22px; }
+.service-price strong { font-size: 42px; line-height: 1.15; }
+.service-price > span { font-size: 11px; letter-spacing: .8px; }
+.service-cta { margin-top: 24px; }
+.service-footnote { font-size: 12px; margin-top: 25px; }
+.gallery { background: #1a1d19; }
+.gallery-grid[data-count="4"] { gap: 18px; }
+.gallery-grid[data-count="4"] .gallery-main img { height: clamp(300px,32vw,440px); object-position: center 55%; }
+.gallery figcaption { font-size: 10px; letter-spacing: 1.4px; padding: 40px 24px 20px; }
+.about { padding-block: 76px; border-bottom: 1px solid var(--line); }
+.about-seal { width: 230px; height: 230px; }
+.about-seal strong { font-size: 94px; }
+.about h2 { font-size: clamp(34px,3.3vw,47px); }
+.about p:not(.eyebrow) { font-size: 15px; max-width: 49ch; }
+.about-signature { margin-top: 20px; }
+/* Endereço e horários próximos, com estado honesto quando não há localização. */
+.contact[data-columns] { grid-template-columns: minmax(0,1.35fr) minmax(0,1fr); gap: 28px; }
+.contact[data-columns="1"] { grid-template-columns: minmax(0,1fr); }
+.contact .contact-intro { grid-column: 1 / -1; position: relative; padding-bottom: 8px; }
+.contact h2 { font-size: clamp(36px,3.8vw,54px); letter-spacing: -1.8px; margin-bottom: 20px; }
+.contact h2 em { font-size: .79em; }
+.contact .contact-intro > p:not(.eyebrow) { font-size: 14px; margin-bottom: 16px; }
+.contact .contact-intro > .text-link { color: var(--gold); }
+.contact .location-card { grid-column: auto; padding: 0; min-height: 0; background: var(--panel); border: 1px solid var(--line); justify-content: flex-start; }
+.location-info { padding: 32px; }
+.location-icon { display: block; width: 32px; height: 32px; color: var(--gold); margin-bottom: 23px; }
+.contact .location-card h3 { font-size: 29px; line-height: 1.25; margin-bottom: 15px; letter-spacing: -.5px; }
+.location-info p { color: var(--muted); font-size: 14px; line-height: 1.7; margin-bottom: 10px; overflow-wrap: anywhere; }
+.location-card #business-address { color: var(--white); }
+.location-card #map-link { color: var(--gold); margin-top: 17px; }
+.location-label { display: block; margin-top: 24px; }
+.contact .hours { padding: 32px; border: 1px solid var(--line); }
+.contact .hours h3 { font-family: var(--serif); font-size: 25px; }
+.hours dl { margin: 22px 0 0; }
+.hours dl > div { font-size: 13px; padding-block: 13px; align-items: baseline; }
+.hours dd { text-align: right; }
+.contact .hours-note { font-size: 12px; color: var(--muted); margin: 20px 0 0; }
+.map-frame { width: 100%; border-top: 1px solid var(--line); }
+.map-frame iframe { height: 280px; }
+.booking { padding-block: 60px; }
+.booking h2 { font-size: clamp(38px,3.8vw,52px); }
+.booking > div:first-child { max-width: 650px; }
+.booking .button { padding-inline: 24px; }
+.booking p:not(.eyebrow) { max-width: 52ch; }
+footer { padding-top: 42px; }
+@media (min-width: 901px) {
+  .hero-content { max-width: 55%; }
+  .contact .contact-intro { padding-right: 270px; }
+  .contact .contact-intro > .text-link { position: absolute; bottom: 26px; right: 0; }
+}
+@media (min-width: 601px) and (max-width: 1100px) {
+  .service-card { padding: 26px 22px; }
+  .service-card h3 { font-size: 25px; }
+  .service-card p { min-height: 100px; }
+  .service-price strong { font-size: 36px; }
+  .service-price { flex-wrap: nowrap; }
+  .service-price > span { font-size: 10px; }
+}
+@media (max-width: 900px) {
+  .header { height: 82px; }
+  .header nav a { display: block; }
+  .hero { min-height: 590px; }
+  .hero h1 { font-size: 76px; }
+  .section { padding-block: 70px; }
+  .contact[data-columns] { gap: 20px; }
+  .location-info,.contact .hours { padding: 26px; }
+}
+@media (max-width: 600px) {
+  .header { height: 76px; }
+  .brand-logo { width: 40px; flex-basis: 40px; }
+  .brand-logo img { height: 40px; }
+  .hero { min-height: 550px; }
+  .hero-content { margin-top: 42px; margin-bottom: 58px; }
+  .hero h1 { font-size: clamp(58px,15.5vw,74px); letter-spacing: -2px; }
+  .hero-description { font-size: 14px; max-width: 32ch; }
+  .hero-actions { gap: 18px; margin-top: 25px; }
+  .hero-actions .button { width: 100%; max-width: 340px; padding: 15px 18px; }
+  .hero-actions .text-link { font-size: 13px; }
+  .hero-note { margin-top: 23px; font-size: 11px; }
+  .values-strip { padding-block: 17px; }
+  .section { padding-block: 58px; }
+  .section-heading h2 { font-size: 36px; letter-spacing: -1.2px; }
+  .section-heading > p { margin-top: 20px; font-size: 14px; }
+  .service-grid { border: 0; gap: 14px; }
+  .service-card { border: 1px solid var(--line); padding: 27px; }
+  .service-card:last-child { border-right: 1px solid var(--line); }
+  .service-icon { margin-bottom: 22px; }
+  .service-card p { min-height: 0; margin-bottom: 22px; }
+  .service-price strong { font-size: 40px; }
+  .gallery-grid[data-count="4"] { gap: 14px; }
+  .gallery-grid[data-count="4"] .gallery-main img { height: 265px; }
+  .gallery figcaption { font-size: 9px; padding: 32px 20px 18px; }
+  .about { gap: 36px; }
+  .about-seal { width: 190px; height: 190px; }
+  .about-seal strong { font-size: 76px; }
+  .about h2 { font-size: 34px; }
+  .contact[data-columns] { grid-template-columns: minmax(0,1fr); gap: 18px; }
+  .contact .contact-intro { padding-bottom: 12px; }
+  .contact h2 { font-size: 38px; letter-spacing: -1px; }
+  .contact .hours h3 { font-size: 24px; }
+  .booking { padding-block: 48px; }
+  .booking h2 { font-size: 38px; }
+  .booking-action { margin-top: 27px; }
+}
+
+
+/* V1.3.1 — composição abstrata original, sem geografia ou rota simulada. */
+.location-card[data-location="pending"] { position: relative; overflow: hidden; min-height: 328px; justify-content: flex-end; }
+.location-preview-art { position: absolute; inset: 0; width: 100%; height: 100%; color: var(--gold); pointer-events: none; }
+.location-art-lines { opacity: .18; }
+.location-art-orbit { opacity: .22; }
+.location-art-marker { opacity: .85; }
+.location-art-accent { opacity: .7; }
+.location-card[data-location="pending"] .location-info { position: relative; padding-top: 150px; }
+.contact .location-card[data-location="pending"] h3 { font-size: clamp(28px,2.6vw,36px); margin-bottom: 13px; }
+.location-card[data-location="pending"] .location-pending { max-width: 34ch; margin-bottom: 0; }
+@media (max-width: 600px) {
+  .location-card[data-location="pending"] { min-height: 296px; }
+  .location-card[data-location="pending"] .location-info { padding-top: 132px; }
+  .contact .location-card[data-location="pending"] h3 { font-size: 29px; }
+}

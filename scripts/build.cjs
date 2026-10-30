@@ -71,7 +71,7 @@ sharp.concurrency(2);
   async function picture(info, hero = false, layout = 'standard') {
     const asset = await photo(info);
     const element = $('<picture>');
-    const sizes = hero ? '100vw' : layout === 'wide' ? '(min-width: 1600px) 1440px, 90vw' : layout === 'third' ? '(max-width: 600px) 88vw, (min-width: 1600px) 470px, 30vw' : '(max-width: 600px) 88vw, 55vw';
+    const sizes = hero ? '100vw' : layout === 'logo' ? '(max-width: 600px) 40px, 58px' : layout === 'wide' ? '(min-width: 1600px) 1440px, 90vw' : layout === 'third' ? '(max-width: 600px) 88vw, (min-width: 1600px) 470px, 30vw' : '(max-width: 600px) 88vw, 55vw';
     for (const format of ['avif','webp']) element.append($('<source>').attr({ type:`image/${format}`, srcset:asset.variants[format].map(v => `${v.src} ${v.width}w`).join(', '), sizes }));
     const image = $('<img>').attr({ src:info.src, alt:info.alt, width:asset.width, height:asset.height, decoding:'async', loading:hero ? 'eager' : 'lazy' });
     if (hero) image.attr('fetchpriority', 'high');
@@ -79,6 +79,9 @@ sharp.concurrency(2);
     return element;
   }
   const content = config.content;
+  const colorVars = { background:'bg', panel:'panel', accent:'gold', text:'white', muted:'muted', border:'line' };
+  $('html').attr('style',Object.entries(config.brand.colors).map(([key,value]) => `--${colorVars[key]}:${value}`).join(';'));
+  if (config.brand.colors.background) $('meta[name="theme-color"]').attr('content',config.brand.colors.background);
   function copy(value, fallback = '') { return string(value) || fallback; }
   function multiline(node, value) { node.empty(); String(value).split('\n').forEach((line,i) => { if(i) node.append('<br>'); node.append(escape(line)); }); }
   function heading(node, first, accent, lead = '') {
@@ -102,6 +105,12 @@ sharp.concurrency(2);
   $('[data-name-rest]').text(words.slice(1).join(' ').toLocaleUpperCase('pt-BR'));
   $('.brand').attr('aria-label', `${config.name}, início`);
   $('.brand-mark').empty().append(escape(monogram)).append('<span>✦</span>');
+  if (config.brand.logo) {
+    const logo = await picture(config.brand.logo,false,'logo');
+    logo.find('img').attr('loading','eager');
+    logo.addClass('brand-logo');
+    $('.brand-mark').each((i,node) => $(node).replaceWith(logo.clone()));
+  }
   const navLabels = Array.isArray(content.nav) ? content.nav : ['Serviços','O espaço','Nossa essência','Contato'];
   $('#navegacao a').each((i,node) => $(node).text(copy(navLabels[i], ['Serviços','O espaço','Nossa essência','Contato'][i])));
   $('.header-cta').empty().text(copy(content.headerCta,'Agende seu horário')).append('<span class="arrow-up" aria-hidden="true"></span>');
@@ -110,7 +119,7 @@ sharp.concurrency(2);
   if (!copy(hero.eyebrow)) $('.hero .eyebrow').remove();
   heading($('h1'), copy(hero.first,config.slogan || config.name), copy(hero.accent), copy(hero.lead));
   if (copy(hero.description)) multiline($('.hero-description'), hero.description); else $('.hero-description').remove();
-  $('.hero-actions .button').empty().text(copy(hero.primaryCta,'Vamos agendar?')).append('<span class="arrow-up" aria-hidden="true"></span>');
+  $('.hero-actions .button').replaceWith(whatsappAction(copy(hero.primaryCta,'Agendar pelo WhatsApp'), 'button hero-cta', config.whatsappMessage));
   $('.hero-actions .text-link').empty().text(copy(hero.secondaryCta,'Conheça os serviços')).append('<span aria-hidden="true">↓</span>');
   if (copy(hero.note)) $('.hero-note').empty().append('<span aria-hidden="true">✦</span>').append(escape(hero.note)); else $('.hero-note').remove();
   if (copy(hero.caption)) $('.hero-caption').text(hero.caption); else $('.hero-caption').remove();
@@ -198,14 +207,24 @@ sharp.concurrency(2);
   $('.hours dl').empty();
   for (const row of config.hours) $('.hours dl').append($('<div>').append($('<dt>').text(row.day)).append($('<dd>').text(row.time)));
   if (!config.hours.length) $('.hours').remove();
-  $('.location-card h3').text(copy(contact.locationTitle,'Localização'));
+  const hasLocation = Boolean(config.address);
+  $('.location-card').attr('data-location',hasLocation ? 'configured' : 'pending');
+  $('.location-card h3').text(copy(hasLocation ? contact.locationTitle : contact.pendingTitle, hasLocation ? 'Nosso endereço' : 'Sua barbearia aqui.'));
   if (config.address) $('#business-address').text(config.address); else $('#business-address').remove();
-  if (config.mapa.link) { link($('#map-link'),config.mapa.link); $('#map-link').removeAttr('hidden'); } else $('#map-link').remove();
-  if (copy(contact.locationLabel)) $('.location-label').text(contact.locationLabel); else $('.location-label').remove();
-  if (!config.address && !config.mapa.link && !config.mapa.embed) $('.location-card').remove();
-  if (config.mapa.embed) $('#contato').append($('<div class="map-frame">').append($('<iframe>').attr({ src:config.mapa.embed, title:`Mapa de localização de ${config.name}`, loading:'lazy', width:'1100', height:'320', referrerpolicy:'no-referrer' })));
-  $('#contato').attr('data-columns', $('#contato > div:not(.map-frame)').length);
-  if (config.city || config.state) $('#contato > div').first().append($('<p class="business-city">').text([config.city,config.state].filter(Boolean).join(' · ')));
+  if (hasLocation) $('.location-preview-art').remove();
+  else $('.location-icon').remove();
+  const area = [config.neighborhood,config.city,config.state].filter(Boolean).join(' · ');
+  if (area) $('.business-city').text(area); else $('.business-city').remove();
+  if (!hasLocation) $('.location-pending').text(copy(contact.pendingDescription,'Seu endereço, sua identidade e o caminho até você. Tudo em um só lugar.')); else $('.location-pending').remove();
+  // A rota e o mapa só aparecem junto de uma localização cadastrada.
+  if (hasLocation && config.mapa.link) { link($('#map-link'),config.mapa.link); $('#map-link').removeAttr('hidden'); } else $('#map-link').remove();
+  if (copy(contact.locationLabel) && hasLocation) $('.location-label').text(contact.locationLabel); else $('.location-label').remove();
+  if (hasLocation && config.mapa.embed) $('.location-card').append($('<div class="map-frame">').append($('<iframe>').attr({ src:config.mapa.embed, title:`Mapa de localização de ${config.name}`, loading:'lazy', width:'1100', height:'320', referrerpolicy:'no-referrer' })));
+  if (copy(contact.hoursNote) && config.hours.length) $('.hours').append($('<p class="hours-note">').text(contact.hoursNote));
+  // Uma seção compacta reúne localização e atendimento antes da chamada final.
+  $('#contato').attr('data-columns',config.hours.length ? '2' : '1');
+  $('#contato > div').first().find('.text-link').attr('href','#agendamento');
+  $('#agendamento').insertAfter('#contato');
   $('.social-links').empty();
   for (const social of config.socialLinks) { const item = $('<a>').text(social.label); link(item,social.url); $('.social-links').append(item); }
   if (config.socialLinks.length) $('.social-links').removeAttr('hidden'); else $('.social-links').remove();
@@ -280,7 +299,7 @@ sharp.concurrency(2);
   $('link[rel="icon"]').attr({href:`assets/brand-icon.svg?v=${iconVersion}`,sizes:'any'});
   for (const size of [16,32,48]) $('head').append($('<link rel="icon" type="image/png">').attr({href:`assets/icon-${size}.png?v=${iconVersion}`,sizes:`${size}x${size}`}));
   $('head').append(`<link rel="apple-touch-icon" sizes="180x180" href="assets/icon-180.png?v=${iconVersion}"><link rel="manifest" href="manifest.webmanifest">`);
-  fs.writeFileSync(path.join(output,'manifest.webmanifest'),JSON.stringify({ name:config.name,short_name:config.name,lang:'pt-BR',start_url:'.',display:'standalone',background_color:'#151714',theme_color:'#151714',icons:[192,512].map(size=>({src:`assets/icon-${size}.png?v=${iconVersion}`,sizes:`${size}x${size}`,type:'image/png',purpose:'any'})) },null,2));
+  fs.writeFileSync(path.join(output,'manifest.webmanifest'),JSON.stringify({ name:config.name,short_name:config.name,lang:'pt-BR',start_url:'.',display:'standalone',background_color:config.brand.colors.background || '#151714',theme_color:config.brand.colors.background || '#151714',icons:[192,512].map(size=>({src:`assets/icon-${size}.png?v=${iconVersion}`,sizes:`${size}x${size}`,type:'image/png',purpose:'any'})) },null,2));
   fs.writeFileSync(path.join(output,'robots.txt'),`User-agent: *\n${config.demo.enabled ? 'Disallow: /' : 'Allow: /'}\n${!config.demo.enabled && config.siteUrl ? `Sitemap: ${new URL('sitemap.xml',config.siteUrl).href}\n` : ''}`);
   fs.writeFileSync(path.join(output,'sitemap.xml'),`<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">${!config.demo.enabled && config.siteUrl ? `<url><loc>${escape(config.siteUrl)}</loc></url>` : ''}</urlset>\n`);
   fs.writeFileSync(path.join(output,'_headers'),`/*\n${config.demo.enabled ? '  X-Robots-Tag: noindex, nofollow\n' : ''}  X-Content-Type-Options: nosniff\n  Referrer-Policy: strict-origin-when-cross-origin\n  Permissions-Policy: camera=(), microphone=(), geolocation=()\n`);
