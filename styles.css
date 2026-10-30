@@ -1262,6 +1262,8 @@ html:not(.js) .whatsapp-float { position: static; margin: 20px; }
 .gallery-grid[data-count="4"] .gallery-main { grid-column: 1 / -1; }
 .gallery-grid[data-count="4"] .gallery-main img { height: 380px; }
 .gallery-grid[data-count="4"] figure:not(.gallery-main) img { height: auto; aspect-ratio: 3 / 4; object-fit: cover; }
+/* Harmonização discreta da fotografia de ambiente, sem alterar o arquivo original. */
+.gallery-grid[data-count="4"] figure:nth-child(4) img { filter: brightness(.9) contrast(1.02); }
 @media (max-width: 600px) {
   .gallery-grid[data-count="4"] { grid-template-columns: minmax(0,1fr); gap: 18px; }
   .gallery-grid[data-count="4"] .gallery-main img { height: 265px; }
